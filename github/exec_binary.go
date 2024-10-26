@@ -20,6 +20,11 @@ func newExecBinary(name string) ExecBinary {
 // ExecBinaryContent represents a executable binary content in a GitHub release asset content.
 type ExecBinaryContent []byte
 
+// IExecBinaryRepository is a repository for [ExecBinary] and [ExecBinaryContent].
+type IExecBinaryRepository interface {
+	Write(meta ExecBinary, content ExecBinaryContent, dir string) error
+}
+
 // ExecBinaryRepository is a repository for [ExecBinary] and [ExecBinaryContent].
 type ExecBinaryRepository struct{}
 
@@ -28,8 +33,8 @@ func NewExecBinaryRepository() *ExecBinaryRepository {
 	return &ExecBinaryRepository{}
 }
 
-// write [ExecBinaryContent] into file in given directory.
-func (r *ExecBinaryRepository) write(meta ExecBinary, content ExecBinaryContent, dir string) error {
+// Write [ExecBinaryContent] into file in given directory.
+func (r *ExecBinaryRepository) Write(meta ExecBinary, content ExecBinaryContent, dir string) error {
 	path := filepath.Join(dir, meta.Name)
 	return os.WriteFile(path, content, 0755)
 }

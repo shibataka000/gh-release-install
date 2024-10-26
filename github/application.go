@@ -7,8 +7,8 @@ import (
 
 // ApplicationService.
 type ApplicationService struct {
-	asset      *AssetRepository
-	execBinary *ExecBinaryRepository
+	asset      IAssetRepository
+	execBinary IExecBinaryRepository
 }
 
 // NewApplicationService returns a new [ApplicationService] object.
@@ -34,7 +34,7 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 		return Asset{}, ExecBinary{}, err
 	}
 
-	assets, err := app.asset.list(ctx, repo, release)
+	assets, err := app.asset.List(ctx, repo, release)
 	if err != nil {
 		return Asset{}, ExecBinary{}, err
 	}
@@ -60,7 +60,7 @@ func (app *ApplicationService) Install(ctx context.Context, repoFullName string,
 		return err
 	}
 
-	assetContent, err := app.asset.download(ctx, repo, asset, w)
+	assetContent, err := app.asset.Download(ctx, repo, asset, w)
 	if err != nil {
 		return err
 	}
@@ -70,5 +70,5 @@ func (app *ApplicationService) Install(ctx context.Context, repoFullName string,
 		return err
 	}
 
-	return app.execBinary.write(execBinary, execBinaryContent, dir)
+	return app.execBinary.Write(execBinary, execBinaryContent, dir)
 }

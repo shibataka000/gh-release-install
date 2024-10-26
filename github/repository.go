@@ -7,15 +7,15 @@ import (
 
 // Repository represents a GitHub repository.
 type Repository struct {
-	owner string
-	name  string
+	Owner string
+	Name  string
 }
 
 // newRepository returns a new [Repository] object.
 func newRepository(owner string, name string) Repository {
 	return Repository{
-		owner: owner,
-		name:  name,
+		Owner: owner,
+		Name:  name,
 	}
 }
 
