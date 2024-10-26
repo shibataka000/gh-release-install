@@ -24,5 +24,5 @@ Flags:
 ## Install
 
 ```
-go install github.com/shibataka000/gh-release-install@master
+go install github.com/shibataka000/gh-release-install@main
 ```
