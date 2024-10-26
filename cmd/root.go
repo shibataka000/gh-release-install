@@ -4,53 +4,58 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"path/filepath"
 
 	"github.com/Songmu/prompter"
-	"github.com/shibataka000/go-get-release/pkg"
+	"github.com/shibataka000/gh-release-install/github"
 	"github.com/spf13/cobra"
 )
 
-// NewCommand return cobra command
+// NewCommand returns cobra command
 func NewCommand() *cobra.Command {
 	var (
-		token      string
-		goos       string
-		goarch     string
-		installDir string
+		repoFullName string
+		tag          string
+		patterns     map[string]string
+		dir          string
+		token        string
 	)
 
 	command := &cobra.Command{
-		Use:   "go-get-release [<owner>/]<repo>[=<tag>]",
+		Use:   "gh-release-install",
 		Short: "Install executable binary from GitHub release asset.",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(_ *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			ctx := context.Background()
-			repository := pkg.NewInfrastructureRepository(ctx, token)
-			factory := pkg.NewFactory()
-			app := pkg.NewApplicationService(repository, factory)
-			platform := pkg.NewPlatform(goos, goarch)
-			query, err := pkg.ParseQuery(args[0])
+			app := github.NewApplicationService(
+				github.NewAssetRepository(token),
+				github.NewExecBinaryRepository(),
+			)
+			asset, execBinary, err := app.Find(ctx, repoFullName, tag, patterns)
 			if err != nil {
 				return err
 			}
-			pkg, err := app.Search(ctx, query, platform)
-			if err != nil {
-				return err
-			}
-			fmt.Printf("%s\n\n", pkg.StringToPrompt())
-			if !prompter.YN("Are you sure to install executable binary from above GitHub release asset?", true) {
+			message := fmt.Sprintf("Do you want to install %s from %s ?", execBinary.Name, asset.DownloadURL.String())
+			if !prompter.YN(message, true) {
 				return nil
 			}
-			fmt.Println()
-			return app.Install(pkg, installDir, os.Stderr)
+			return app.Install(ctx, repoFullName, asset, execBinary, dir, os.Stdout)
 		},
+		SilenceErrors: true,
+		SilenceUsage:  true,
 	}
 
-	command.Flags().StringVar(&token, "token", os.Getenv("GITHUB_TOKEN"), "github token [$GITHUB_TOKEN]")
-	command.Flags().StringVar(&goos, "goos", os.Getenv("GOOS"), "goos [$GOOS]")
-	command.Flags().StringVar(&goarch, "goarch", os.Getenv("GOARCH"), "goarch [$GOARCH]")
-	command.Flags().StringVar(&installDir, "install-dir", filepath.Join(os.Getenv("GOPATH"), "bin"), "directory where executable binary will be installed to")
+	command.Flags().StringVarP(&repoFullName, "repo", "R", "", "GitHub repository name. This should be OWNER/REPO format.")
+	command.Flags().StringVar(&tag, "tag", "", "GitHub release tag.")
+	command.Flags().StringToStringVar(&patterns, "pattern", github.DefaultPatterns, "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
+	command.Flags().StringVarP(&dir, "dir", "D", ".", "Directory where executable binary will be installed into.")
+	command.Flags().StringVar(&token, "token", "", "Authentication token for GitHub API requests.")
+
+	requiredFlags := []string{"repo", "tag", "token"}
+
+	for _, flag := range requiredFlags {
+		if err := command.MarkFlagRequired(flag); err != nil {
+			panic(err)
+		}
+	}
 
 	return command
 }
