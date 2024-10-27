@@ -27,7 +27,7 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 		return Asset{}, ExecBinary{}, err
 	}
 
-	release := newRelease(tag)
+	release := NewRelease(tag)
 
 	ps, err := newPatternArrayFromStringMap(patterns)
 	if err != nil {

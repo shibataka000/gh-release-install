@@ -22,21 +22,21 @@ type Asset struct {
 	DownloadURL *url.URL
 }
 
-// newAsset returns a new [Asset] object.
-func newAsset(id int64, downloadURL *url.URL) Asset {
+// NewAsset returns a new [Asset] object.
+func NewAsset(id int64, downloadURL *url.URL) Asset {
 	return Asset{
 		ID:          id,
 		DownloadURL: downloadURL,
 	}
 }
 
-// newAssetFromString returns a new [Asset] object.
-func newAssetFromString(id int64, downloadURL string) (Asset, error) {
+// NewAssetFromString returns a new [Asset] object.
+func NewAssetFromString(id int64, downloadURL string) (Asset, error) {
 	parsed, err := url.Parse(downloadURL)
 	if err != nil {
 		return Asset{}, err
 	}
-	return newAsset(id, parsed), nil
+	return NewAsset(id, parsed), nil
 }
 
 // AssetContent represents a GitHub release asset content.
@@ -131,7 +131,7 @@ func (r *AssetRepository) List(ctx context.Context, repo Repository, release Rel
 			return nil, err
 		}
 		for _, githubAsset := range githubAssets {
-			asset, err := newAssetFromString(githubAsset.GetID(), githubAsset.GetBrowserDownloadURL())
+			asset, err := NewAssetFromString(githubAsset.GetID(), githubAsset.GetBrowserDownloadURL())
 			if err != nil {
 				return nil, err
 			}

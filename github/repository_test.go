@@ -15,7 +15,7 @@ func TestNewRepositoryFromFullName(t *testing.T) {
 		{
 			name:     "hashicorp/terraform",
 			fullName: "hashicorp/terraform",
-			repo:     newRepository("hashicorp", "terraform"),
+			repo:     NewRepository("hashicorp", "terraform"),
 		},
 	}
 
