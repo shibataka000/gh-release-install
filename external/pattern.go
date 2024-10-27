@@ -1,3 +1,3 @@
 package external
 
-var DefaultPattern = map[string]string{}
+var DefaultPatterns = map[string]string{}

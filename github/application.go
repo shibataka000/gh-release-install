@@ -12,7 +12,7 @@ type ApplicationService struct {
 }
 
 // NewApplicationService returns a new [ApplicationService] object.
-func NewApplicationService(asset *AssetRepository, execBinary *ExecBinaryRepository) *ApplicationService {
+func NewApplicationService(asset IAssetRepository, execBinary IExecBinaryRepository) *ApplicationService {
 	return &ApplicationService{
 		asset:      asset,
 		execBinary: execBinary,

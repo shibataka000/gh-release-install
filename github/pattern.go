@@ -95,7 +95,7 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 		return ExecBinary{}, err
 	}
 
-	return newExecBinary(b.String()), nil
+	return NewExecBinary(b.String()), nil
 }
 
 // find matching [Asset] and [Pattern] and returns them.

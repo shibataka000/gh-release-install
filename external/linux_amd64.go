@@ -9,6 +9,6 @@ import (
 var defaultPatternForLinuxAmd64 = map[string]string{}
 
 func init() {
-	maps.Copy(DefaultPattern, github.DefaultPatterns)
-	maps.Copy(DefaultPattern, defaultPatternForLinuxAmd64)
+	maps.Copy(DefaultPatterns, github.DefaultPatterns)
+	maps.Copy(DefaultPatterns, defaultPatternForLinuxAmd64)
 }

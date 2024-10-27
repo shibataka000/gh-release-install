@@ -78,13 +78,13 @@ func TestPatternExecute(t *testing.T) {
 			name:       "CapturingGroup",
 			pattern:    must(newPatternFromString(`https://github\.com/cli/cli/releases/download/.+/(\w+)_[\d\.]+_linux_amd64\.tar\.gz`, `{{index . "1"}}`)),
 			asset:      must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
-			execBinary: newExecBinary("gh"),
+			execBinary: NewExecBinary("gh"),
 		},
 		{
 			name:       "NamedCapturingGroup",
 			pattern:    must(newPatternFromString(`https://github\.com/cli/cli/releases/download/.+/(?P<name>\w+)_[\d\.]+_linux_amd64\.tar\.gz`, "{{.name}}")),
 			asset:      must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
-			execBinary: newExecBinary("gh"),
+			execBinary: NewExecBinary("gh"),
 		},
 	}
 

@@ -10,8 +10,8 @@ type ExecBinary struct {
 	Name string
 }
 
-// newExecBinary returns a new [ExecBinary] object.
-func newExecBinary(name string) ExecBinary {
+// NewExecBinary returns a new [ExecBinary] object.
+func NewExecBinary(name string) ExecBinary {
 	return ExecBinary{
 		Name: name,
 	}
