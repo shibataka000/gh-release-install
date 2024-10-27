@@ -38,7 +38,11 @@ func mustNewAssetTemplateFromString(downloadURL string) AssetTemplate {
 // execute applies a [AssetTemplate] to [github.com/shibataka000/gh-release-install/github.Release] and returns [github.com/shibataka000/gh-release-install/github.Asset].
 func (a AssetTemplate) execute(release github.Release) (github.Asset, error) {
 	var buf bytes.Buffer
-	if err := a.downloadURL.Execute(&buf, release); err != nil {
+	data := map[string]string{
+		"Tag":    release.Tag,
+		"SemVer": release.SemVer(),
+	}
+	if err := a.downloadURL.Execute(&buf, data); err != nil {
 		return github.Asset{}, err
 	}
 	return newAssetFromString(buf.String())
