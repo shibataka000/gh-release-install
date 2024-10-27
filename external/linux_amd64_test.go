@@ -47,6 +47,13 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 		test         *exec.Cmd
 	}{
 		{
+			repoFullName: "gravitational/teleport",
+			tag:          "v16.4.6",
+			asset:        must(github.NewAssetFromString(0, "https://cdn.teleport.dev/teleport-v16.4.6-linux-amd64-bin.tar.gz")),
+			execBinary:   github.NewExecBinary("tsh"),
+			test:         exec.Command("./tsh", "version"),
+		},
+		{
 			repoFullName: "hashicorp/terraform",
 			tag:          "v1.9.0",
 			asset:        must(github.NewAssetFromString(0, "https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip")),
