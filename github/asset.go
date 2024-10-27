@@ -96,7 +96,7 @@ func newReaderToExtract(b []byte, meta ExecBinary) (io.Reader, io.Closer, error)
 	}
 }
 
-// IAssetRepository is a repository for [Asset] and [AssetContent].
+// IAssetRepository is an interface about repository for [Asset] and [AssetContent].
 type IAssetRepository interface {
 	List(ctx context.Context, repo Repository, release Release) ([]Asset, error)
 	Download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error)
