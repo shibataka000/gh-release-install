@@ -3,20 +3,17 @@ package external
 import (
 	"bytes"
 	"context"
-	"errors"
 	"io"
 	"net/http"
-	"net/url"
 	"text/template"
 
 	"github.com/cheggaaa/pb/v3"
 	"github.com/shibataka000/gh-release-install/github"
 )
 
-func newAsset(downloadURL *url.URL) github.Asset {
-	return github.Asset{
-		DownloadURL: downloadURL,
-	}
+// newAssetFromString returns a new [github.com/shibataka000/gh-release-install/github.Asset] object.
+func newAssetFromString(downloadURL string) (github.Asset, error) {
+	return github.NewAssetFromString(0, downloadURL)
 }
 
 // AssetTemplate is a template of [github.com/shibataka000/gh-release-install/github.Asset].
@@ -43,11 +40,7 @@ func (a AssetTemplate) execute(release github.Release) (github.Asset, error) {
 	if err := a.downloadURL.Execute(&buf, release); err != nil {
 		return github.Asset{}, err
 	}
-	downloadURL, err := url.Parse(buf.String())
-	if err != nil {
-		return github.Asset{}, err
-	}
-	return newAsset(downloadURL), nil
+	return newAssetFromString(buf.String())
 }
 
 // AssetTemplateList is a list of [AssetTemplate].
@@ -73,7 +66,7 @@ type AssetTemplateMap map[github.Repository]AssetTemplateList
 func (m AssetTemplateMap) get(repo github.Repository) (AssetTemplateList, error) {
 	val, ok := m[repo]
 	if !ok {
-		return nil, errors.New("")
+		return nil, ErrNoAssetTemplatesFound
 	}
 	return val, nil
 }
