@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestApplicationServiceFindAndInstallOnLinuxAmd64(t *testing.T) {
+func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 	tests := []struct {
 		repoFullName string
 		tag          string
@@ -148,7 +148,7 @@ func TestApplicationServiceFindAndInstallOnLinuxAmd64(t *testing.T) {
 			defer os.RemoveAll(dir)
 			tt.test.Dir = dir
 
-			before := cloneCommand(tt.test)
+			before := cloneCommand(t, tt.test)
 			require.Error(before.Run(), "executable binary was already installed")
 
 			app := NewApplicationService(
@@ -166,12 +166,16 @@ func TestApplicationServiceFindAndInstallOnLinuxAmd64(t *testing.T) {
 			err = app.Install(ctx, tt.repoFullName, asset, execBinary, dir, io.Discard)
 			require.NoError(err)
 
-			after := cloneCommand(tt.test)
+			after := cloneCommand(t, tt.test)
 			require.NoError(after.Run())
 		})
 	}
 }
 
-func cloneCommand(cmd *exec.Cmd) *exec.Cmd {
-	return exec.Command(cmd.Args[0], cmd.Args[1:]...)
+// cloneCommand clones [exec.Cmd] and return it.
+func cloneCommand(t *testing.T, cmd *exec.Cmd) *exec.Cmd {
+	t.Helper()
+	newCmd := exec.Command(cmd.Args[0], cmd.Args[1:]...)
+	newCmd.Dir = cmd.Dir
+	return newCmd
 }
