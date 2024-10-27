@@ -142,23 +142,21 @@ func TestApplicationServiceFindAndInstallOnLinuxAmd64(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.repoFullName, func(t *testing.T) {
 			require := require.New(t)
-			ctx := context.Background()
 
 			dir, err := os.MkdirTemp("", "")
 			require.NoError(err)
 			defer os.RemoveAll(dir)
+			tt.test.Dir = dir
 
-			before := exec.Command(tt.test.Args[0], tt.test.Args[1:]...)
-			before.Dir = dir
-			after := exec.Command(tt.test.Args[0], tt.test.Args[1:]...)
-			after.Dir = dir
-
+			before := cloneCommand(tt.test)
 			require.Error(before.Run(), "executable binary was already installed")
 
 			app := NewApplicationService(
 				NewAssetRepository(githubTokenForTest),
 				NewExecBinaryRepository(),
 			)
+
+			ctx := context.Background()
 
 			asset, execBinary, err := app.Find(ctx, tt.repoFullName, tt.tag, DefaultPatterns)
 			require.NoError(err)
@@ -167,7 +165,13 @@ func TestApplicationServiceFindAndInstallOnLinuxAmd64(t *testing.T) {
 
 			err = app.Install(ctx, tt.repoFullName, asset, execBinary, dir, io.Discard)
 			require.NoError(err)
+
+			after := cloneCommand(tt.test)
 			require.NoError(after.Run())
 		})
 	}
+}
+
+func cloneCommand(cmd *exec.Cmd) *exec.Cmd {
+	return exec.Command(cmd.Args[0], cmd.Args[1:]...)
 }
