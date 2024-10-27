@@ -35,7 +35,7 @@ func mustNewAssetTemplateFromString(downloadURL string) AssetTemplate {
 	return newAssetTemplate(template.Must(template.New("DownloadURL").Parse(downloadURL)))
 }
 
-// execute applies a [AssetTemplate] to [github.com/shibataka000/gh-release-install/github.Release] and returns [github.com/shibataka000/gh-release-install/github.Asset].
+// execute applies a [AssetTemplate] to [github.com/shibataka000/gh-release-install/github.Release] object and returns [github.com/shibataka000/gh-release-install/github.Asset] object.
 func (a AssetTemplate) execute(release github.Release) (github.Asset, error) {
 	var buf bytes.Buffer
 	data := map[string]string{
@@ -94,11 +94,6 @@ func NewAssetRepository() *AssetRepository {
 	}
 }
 
-// Has returns true if [AssetRepository] contains asset templates about given repository.
-func (r *AssetRepository) Has(repo github.Repository) bool {
-	return r.templates.has(repo)
-}
-
 // List GitHub release assets and returns them.
 func (r *AssetRepository) List(ctx context.Context, repo github.Repository, release github.Release) ([]github.Asset, error) {
 	templates, err := r.templates.get(repo)
@@ -120,4 +115,9 @@ func (r *AssetRepository) Download(ctx context.Context, _ github.Repository, ass
 	pr := pb.Full.Start64(resp.ContentLength).SetWriter(w).NewProxyReader(resp.Body)
 
 	return io.ReadAll(pr)
+}
+
+// Has returns true if [AssetRepository] contains asset templates about given repository.
+func (r *AssetRepository) Has(repo github.Repository) bool {
+	return r.templates.has(repo)
 }
