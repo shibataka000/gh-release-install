@@ -1,6 +1,8 @@
 module github.com/shibataka000/gh-release-install
 
-go 1.22
+go 1.22.0
+
+toolchain go1.23.2
 
 require (
 	github.com/Songmu/prompter v0.5.1
@@ -10,6 +12,7 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
 	github.com/ulikunitz/xz v0.5.12
+	golang.org/x/mod v0.21.0
 )
 
 require (
