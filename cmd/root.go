@@ -18,6 +18,9 @@ func NewCommand() *cobra.Command {
 		patterns     map[string]string
 		dir          string
 		token        string
+
+		defaultRepoFullName = os.Getenv("GH_REPO")
+		defaultToken        = os.Getenv("GH_TOKEN")
 	)
 
 	command := &cobra.Command{
@@ -43,19 +46,25 @@ func NewCommand() *cobra.Command {
 		SilenceUsage:  true,
 	}
 
-	command.Flags().StringVarP(&repoFullName, "repo", "R", "", "GitHub repository name. This should be OWNER/REPO format.")
+	command.Flags().StringVarP(&repoFullName, "repo", "R", defaultRepoFullName, "GitHub repository name. This should be OWNER/REPO format.")
 	command.Flags().StringVar(&tag, "tag", "", "GitHub release tag.")
 	command.Flags().StringToStringVar(&patterns, "pattern", github.DefaultPatterns, "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
 	command.Flags().StringVarP(&dir, "dir", "D", ".", "Directory where executable binary will be installed into.")
-	command.Flags().StringVar(&token, "token", "", "Authentication token for GitHub API requests.")
+	command.Flags().StringVar(&token, "token", defaultToken, "Authentication token for GitHub API requests.")
 
-	requiredFlags := []string{"repo", "tag", "token"}
-
-	for _, flag := range requiredFlags {
-		if err := command.MarkFlagRequired(flag); err != nil {
-			panic(err)
-		}
-	}
+	markFlagRequired(command, "repo", defaultRepoFullName)
+	markFlagRequired(command, "tag", "")
+	markFlagRequired(command, "token", defaultToken)
 
 	return command
+}
+
+// markFlagRequired marks flag as required if default value is not set.
+func markFlagRequired(command *cobra.Command, name string, defaultValue string) {
+	if defaultValue != "" {
+		return
+	}
+	if err := command.MarkFlagRequired(name); err != nil {
+		panic(err)
+	}
 }
