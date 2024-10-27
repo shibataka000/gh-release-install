@@ -7,15 +7,15 @@ import (
 
 // Repository represents a GitHub repository.
 type Repository struct {
-	owner string
-	name  string
+	Owner string
+	Name  string
 }
 
-// newRepository returns a new [Repository] object.
-func newRepository(owner string, name string) Repository {
+// NewRepository returns a new [Repository] object.
+func NewRepository(owner string, name string) Repository {
 	return Repository{
-		owner: owner,
-		name:  name,
+		Owner: owner,
+		Name:  name,
 	}
 }
 
@@ -26,5 +26,5 @@ func newRepositoryFromFullName(fullName string) (Repository, error) {
 	if len(s) != 2 {
 		return Repository{}, fmt.Errorf("%w: %s", ErrInvalidRepositoryFullName, fullName)
 	}
-	return newRepository(s[0], s[1]), nil
+	return NewRepository(s[0], s[1]), nil
 }
