@@ -71,7 +71,7 @@ type AssetTemplateMap map[github.Repository]AssetTemplateList
 func (m AssetTemplateMap) get(repo github.Repository) (AssetTemplateList, error) {
 	val, ok := m[repo]
 	if !ok {
-		return nil, ErrNoAssetTemplatesFound
+		return nil, ErrAssetTemplateNotFound
 	}
 	return val, nil
 }
