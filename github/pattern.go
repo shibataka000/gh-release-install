@@ -8,15 +8,15 @@ import (
 	"text/template"
 )
 
-var (
-	// DefaultPatterns is recommended patterns. This is overwritten for each platform.
-	DefaultPatterns = map[string]string{}
-)
-
 // Pattern represents a pair of regular expression of GitHub release asset download URL and template of executable binary name.
 // This is used to select an appropriate one from GitHub release assets and determine an executable binary name.
 type Pattern struct {
-	asset      *regexp.Regexp
+	// asset is a regular expression of GitHub release asset download URL.
+	// This is used to select an appropriate one from GitHub release assets and used as input data to determine an executable binary name.
+	asset *regexp.Regexp
+
+	// execBinary is a template of executable binary name.
+	// This is used to determine an executable binary name.
 	execBinary *template.Template
 }
 
@@ -90,7 +90,7 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 		return ExecBinary{}, err
 	}
 
-	return newExecBinary(b.String()), nil
+	return NewExecBinary(b.String()), nil
 }
 
 // find matching [Asset] and [Pattern] and returns them.

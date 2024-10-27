@@ -1,15 +1,22 @@
 package github
 
-var defaultPatternsForLinuxAmd64 = map[string]string{
-	// General patterns.
-	`(?i)^https://github\.com/.+/.+/releases/download/.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|64bit))?(\.tar\.gz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
+var (
+	// DefaultPatterns are recommended patterns.
+	DefaultPatterns = appendMap(DefaultCorePatterns, DefaultExtPatterns)
 
-	// Patterns for specific repository. These must start with literals.
-	`https://github\.com/istio/istio/releases/download/.+/istioctl-\d+\.\d+\.\d+-linux-amd64\.tar\.gz$`:      "istioctl",
-	`https://github\.com/starship/starship/releases/download/.+/starship-x86_64-unknown-linux-gnu\.tar\.gz$`: "starship",
-	`https://github\.com/protocolbuffers/protobuf/releases/download/.+/protoc-\d+\.\d+-linux-x86_64\.zip$`:   "protoc",
-}
+	// DefaultCorePatterns are recommended patterns for general repository.
+	// These are same as [github.com/shibataka000/gh-release-install/external.DefaultCorePatterns].
+	// These are for linux/amd64.
+	DefaultCorePatterns = map[string]string{
+		`(?i)^.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|64bit))?(\.tar\.gz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
+	}
 
-func init() {
-	DefaultPatterns = defaultPatternsForLinuxAmd64
-}
+	// DefaultExtPatterns are recommended patterns for specific repository.
+	// These should start with literals containing host to avoid conflict with other patterns.
+	// These are for linux/amd64.
+	DefaultExtPatterns = map[string]string{
+		`https://github\.com/istio/istio/releases/download/.+/istioctl-\d+\.\d+\.\d+-linux-amd64\.tar\.gz$`:      "istioctl",
+		`https://github\.com/starship/starship/releases/download/.+/starship-x86_64-unknown-linux-gnu\.tar\.gz$`: "starship",
+		`https://github\.com/protocolbuffers/protobuf/releases/download/.+/protoc-\d+\.\d+-linux-x86_64\.zip$`:   "protoc",
+	}
+)

@@ -7,24 +7,24 @@ import (
 
 // Repository represents a GitHub repository.
 type Repository struct {
-	owner string
-	name  string
+	Owner string
+	Name  string
 }
 
-// newRepository returns a new [Repository] object.
-func newRepository(owner string, name string) Repository {
+// NewRepository returns a new [Repository] object.
+func NewRepository(owner string, name string) Repository {
 	return Repository{
-		owner: owner,
-		name:  name,
+		Owner: owner,
+		Name:  name,
 	}
 }
 
-// newRepositoryFromFullName returns a new [Repository] object from repository full name.
+// NewRepositoryFromFullName returns a new [Repository] object from repository full name.
 // Repository full name should be 'OWNER/REPO' format.
-func newRepositoryFromFullName(fullName string) (Repository, error) {
+func NewRepositoryFromFullName(fullName string) (Repository, error) {
 	s := strings.Split(fullName, "/")
 	if len(s) != 2 {
 		return Repository{}, fmt.Errorf("%w: %s", ErrInvalidRepositoryFullName, fullName)
 	}
-	return newRepository(s[0], s[1]), nil
+	return NewRepository(s[0], s[1]), nil
 }
