@@ -18,7 +18,10 @@ import (
 
 // Asset represents a GitHub release asset.
 type Asset struct {
-	ID          int64
+	// ID. If asset is hosted on server outside from GitHub, this should be 0.
+	ID int64
+
+	// DownloadURL is an URL to download an asset content.
 	DownloadURL *url.URL
 }
 

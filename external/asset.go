@@ -13,6 +13,7 @@ import (
 
 // newAssetFromString returns a new [github.com/shibataka000/gh-release-install/github.Asset] object.
 func newAssetFromString(downloadURL string) (github.Asset, error) {
+	// ID should be 0. See [github.com/shibataka000/gh-release-install/github.Asset]'s comments for more details.
 	return github.NewAssetFromString(0, downloadURL)
 }
 
