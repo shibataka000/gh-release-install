@@ -109,6 +109,13 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			test:         exec.Command("./istioctl", "version"),
 		},
 		{
+			repoFullName: "koalaman/shellcheck",
+			tag:          "v0.10.0",
+			asset:        must(NewAssetFromString(155543215, "https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.x86_64.tar.xz")),
+			execBinary:   NewExecBinary("shellcheck"),
+			test:         exec.Command("./shellcheck", "--version"),
+		},
+		{
 			repoFullName: "mikefarah/yq",
 			tag:          "v4.44.2",
 			asset:        must(NewAssetFromString(174040565, "https://github.com/mikefarah/yq/releases/download/v4.44.2/yq_linux_amd64")),
