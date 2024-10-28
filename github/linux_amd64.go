@@ -12,7 +12,7 @@ var (
 	}
 
 	// DefaultExtPatterns are recommended patterns for specific repository.
-	// These should start with literals containing host to avoid conflict with other patterns.
+	// These should start with literals containing host and repository name to avoid conflict with other patterns.
 	// These are for linux/amd64.
 	DefaultExtPatterns = map[string]string{
 		`https://github\.com/istio/istio/releases/download/.+/istioctl-\d+\.\d+\.\d+-linux-amd64\.tar\.gz$`:      "istioctl",
