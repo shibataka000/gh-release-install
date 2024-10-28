@@ -190,11 +190,13 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			require.Equal(tt.asset, asset)
 			require.Equal(tt.execBinary, execBinary)
 
-			err = app.Install(ctx, tt.repoFullName, asset, execBinary, dir, io.Discard)
-			require.NoError(err)
+			if !testing.Short() {
+				err := app.Install(ctx, tt.repoFullName, asset, execBinary, dir, io.Discard)
+				require.NoError(err)
 
-			after := cloneCommand(t, tt.test)
-			require.NoError(after.Run())
+				after := cloneCommand(t, tt.test)
+				require.NoError(after.Run())
+			}
 		})
 	}
 }
