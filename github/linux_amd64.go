@@ -8,7 +8,7 @@ var (
 	// These are same as [github.com/shibataka000/gh-release-install/external.DefaultCorePatterns].
 	// These are for linux/amd64.
 	DefaultCorePatterns = map[string]string{
-		`(?i)^.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|64bit))?(\.tar\.gz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
+		`(?i)^.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|64bit))?(\.tar\.gz|\.tar\.xz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
 	}
 
 	// DefaultExtPatterns are recommended patterns for specific repository.
