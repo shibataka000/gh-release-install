@@ -8,7 +8,7 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.6
 	github.com/google/go-github/v62 v62.0.0
 	github.com/spf13/cobra v1.8.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 	github.com/ulikunitz/xz v0.5.12
 	golang.org/x/mod v0.22.0
 )
