@@ -9,4 +9,6 @@ var (
 	ErrUnexpectedMIME = errors.New("unexpected mime type")
 	// ErrNoAssetsMatchPatterns is returned when no release assets matched given patterns.
 	ErrNoAssetsMatchPatterns = errors.New("no release assets matched given patterns")
+	// ErrExternalAssetTemplateNotFound is returned when no external asset templates was found for given repository.
+	ErrExternalAssetTemplateNotFound = errors.New("no external asset templates was found for given repository")
 )
