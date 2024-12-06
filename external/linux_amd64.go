@@ -1,11 +1,5 @@
 package external
 
-import (
-	"maps"
-
-	"github.com/shibataka000/gh-release-install/github"
-)
-
 var (
 	// DefaultPatterns are recommended patterns.
 	DefaultPatterns = appendMap(DefaultCorePatterns, DefaultExtPatterns)
@@ -13,7 +7,9 @@ var (
 	// DefaultCorePatterns are recommended patterns for general repository.
 	// These are same as [github.com/shibataka000/gh-release-install/github.DefaultCorePatterns].
 	// These are for linux/amd64.
-	DefaultCorePatterns = maps.Clone(github.DefaultCorePatterns)
+	DefaultCorePatterns = map[string]string{
+		`(?i)^.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|64bit))?(\.tar\.gz|\.tar\.xz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
+	}
 
 	// DefaultExtPatterns are recommended patterns for specific repository.
 	// These should start with literals containing host to avoid conflict with other patterns.

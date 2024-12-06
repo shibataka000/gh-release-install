@@ -5,37 +5,10 @@ import (
 	"io"
 	"os"
 	"os/exec"
-	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
-
-func TestDefaultCorePatterns(t *testing.T) {
-	for k := range DefaultCorePatterns {
-		name := k
-		t.Run(name, func(t *testing.T) {
-			require := require.New(t)
-			re, err := regexp.Compile(k)
-			require.NoError(err)
-			prefix, _ := re.LiteralPrefix()
-			require.Equal("", prefix)
-		})
-	}
-}
-
-func TestDefaultExtPatterns(t *testing.T) {
-	for k := range DefaultExtPatterns {
-		name := k
-		t.Run(name, func(t *testing.T) {
-			require := require.New(t)
-			re, err := regexp.Compile(k)
-			require.NoError(err)
-			prefix, _ := re.LiteralPrefix()
-			require.Greater(len(prefix), 0)
-		})
-	}
-}
 
 func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 	tests := []struct {
@@ -102,6 +75,27 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			test:         exec.Command("./dockle", "--version"),
 		},
 		{
+			repoFullName: "gravitational/teleport",
+			tag:          "v16.4.6",
+			asset:        must(NewAssetFromString(0, "https://cdn.teleport.dev/teleport-v16.4.6-linux-amd64-bin.tar.gz")),
+			execBinary:   NewExecBinary("tsh"),
+			test:         exec.Command("./tsh", "version"),
+		},
+		{
+			repoFullName: "hashicorp/terraform",
+			tag:          "v1.9.0",
+			asset:        must(NewAssetFromString(0, "https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip")),
+			execBinary:   NewExecBinary("terraform"),
+			test:         exec.Command("./terraform", "version"),
+		},
+		{
+			repoFullName: "helm/helm",
+			tag:          "v3.16.2",
+			asset:        must(NewAssetFromString(0, "https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz")),
+			execBinary:   NewExecBinary("helm"),
+			test:         exec.Command("./helm", "version"),
+		},
+		{
 			repoFullName: "istio/istio",
 			tag:          "1.22.2",
 			asset:        must(NewAssetFromString(176364493, "https://github.com/istio/istio/releases/download/1.22.2/istioctl-1.22.2-linux-amd64.tar.gz")),
@@ -114,6 +108,13 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			asset:        must(NewAssetFromString(155543215, "https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.x86_64.tar.xz")),
 			execBinary:   NewExecBinary("shellcheck"),
 			test:         exec.Command("./shellcheck", "--version"),
+		},
+		{
+			repoFullName: "kubernetes/kubernetes",
+			tag:          "v1.31.0",
+			asset:        must(NewAssetFromString(0, "https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl")),
+			execBinary:   NewExecBinary("kubectl"),
+			test:         exec.Command("./kubectl", "version", "--client"),
 		},
 		{
 			repoFullName: "mikefarah/yq",
