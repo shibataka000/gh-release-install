@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/Songmu/prompter"
+	"github.com/shibataka000/gh-release-install/github"
 	"github.com/spf13/cobra"
 )
 
@@ -27,10 +28,10 @@ func NewCommand() *cobra.Command {
 		Short: "Install executable binary from GitHub release asset.",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			ctx := context.Background()
-			app, err := newApplicationService(token, repoFullName)
-			if err != nil {
-				return err
-			}
+			app := github.NewApplicationService(
+				github.NewAssetRepository(token),
+				github.NewExecBinaryRepository(),
+			)
 			asset, execBinary, err := app.Find(ctx, repoFullName, tag, patterns)
 			if err != nil {
 				return err
@@ -47,7 +48,7 @@ func NewCommand() *cobra.Command {
 
 	command.Flags().StringVarP(&repoFullName, "repo", "R", defaultRepoFullName, "GitHub repository name. This should be OWNER/REPO format.")
 	command.Flags().StringVar(&tag, "tag", "", "GitHub release tag.")
-	command.Flags().StringToStringVar(&patterns, "pattern", defaultPatterns(), "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
+	command.Flags().StringToStringVar(&patterns, "pattern", github.DefaultPatterns, "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
 	command.Flags().StringVarP(&dir, "dir", "D", ".", "Directory where executable binary will be installed into.")
 	command.Flags().StringVar(&token, "token", defaultToken, "Authentication token for GitHub API requests.")
 
