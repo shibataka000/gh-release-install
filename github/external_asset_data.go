@@ -1,6 +1,6 @@
 package github
 
-// DefaultExternalAssetTemplates are known release asset templates hosted on server other than GitHub.
+// DefaultExternalAssetTemplates are templates of known release asset NOT hosted on GitHub.
 var DefaultExternalAssetTemplates = map[Repository][]ExternalAssetTemplate{
 	newRepository("gravitational", "teleport"): {
 		// Linux

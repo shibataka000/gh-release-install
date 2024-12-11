@@ -11,13 +11,13 @@ import (
 	"github.com/cheggaaa/pb/v3"
 )
 
-// newExternalAssetFromString return a new [Asset] object hosted on server other than GitHub.
+// newExternalAssetFromString return a new [Asset] object NOT hosted on GitHub.
 func newExternalAssetFromString(downloadURL string) (Asset, error) {
 	// ID should be 0. See [Asset] for more details.
 	return newAssetFromString(0, downloadURL)
 }
 
-// ExternalAssetTemplate is a template of [Asset] hosted on server other than GitHub.
+// ExternalAssetTemplate is a template of [Asset] NOT hosted on GitHub.
 type ExternalAssetTemplate struct {
 	downloadURL *template.Template
 }
@@ -51,7 +51,7 @@ func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	return newExternalAssetFromString(buf.String())
 }
 
-// AssetRepository is a repository for [Asset] and [AssetContent] hosted on server other than GitHub.
+// AssetRepository is a repository for [Asset] and [AssetContent] NOT hosted on GitHub.
 type ExternalAssetRepository struct {
 	templates map[Repository][]ExternalAssetTemplate
 }

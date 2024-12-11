@@ -12,7 +12,7 @@ var (
 		`https://github\.com/starship/starship/releases/download/.+/starship-x86_64-unknown-linux-gnu\.tar\.gz$`: "starship",
 		`https://github\.com/protocolbuffers/protobuf/releases/download/.+/protoc-\d+\.\d+-linux-x86_64\.zip$`:   "protoc",
 
-		// These are recommended patterns for specific repository whose release assets are hosted on server other than GitHub.
+		// These are recommended patterns for specific repository whose release assets are NOT hosted onGitHub.
 		// These should start with literals containing host to avoid conflict with other patterns.
 		`https://dl\.k8s\.io/release/.+/bin/linux/amd64/kubectl`:         "kubectl",
 		`https://cdn\.teleport\.dev/teleport-v.+-linux-amd64-bin.tar.gz`: "tsh",
