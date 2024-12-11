@@ -101,8 +101,8 @@ func newReaderToExtract(b []byte, meta ExecBinary) (io.Reader, io.Closer, error)
 
 // IAssetRepository is an interface about repository for [Asset] and [AssetContent].
 type IAssetRepository interface {
-	List(ctx context.Context, repo Repository, release Release) ([]Asset, error)
-	Download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error)
+	list(ctx context.Context, repo Repository, release Release) ([]Asset, error)
+	download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error)
 }
 
 // AssetRepository is a repository for [Asset] and [AssetContent].
@@ -118,7 +118,7 @@ func NewAssetRepository(token string) *AssetRepository {
 }
 
 // List GitHub release assets and returns them.
-func (r *AssetRepository) List(ctx context.Context, repo Repository, release Release) ([]Asset, error) {
+func (r *AssetRepository) list(ctx context.Context, repo Repository, release Release) ([]Asset, error) {
 	assets := []Asset{}
 
 	githubRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, repo.owner, repo.name, release.tag)
@@ -148,7 +148,7 @@ func (r *AssetRepository) List(ctx context.Context, repo Repository, release Rel
 
 // Download a GitHub release asset content and returns it.
 // Progress bar is written into w.
-func (r *AssetRepository) Download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error) {
+func (r *AssetRepository) download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error) {
 	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, repo.owner, repo.name, asset.id)
 	if err != nil {
 		return nil, err

@@ -90,7 +90,7 @@ func TestExternalAssetRepositoryList(t *testing.T) {
 			require := require.New(t)
 			ctx := context.Background()
 			repository := NewExternalAssetRepository(DefaultExternalAssetTemplates)
-			assets, err := repository.List(ctx, tt.repo, tt.release)
+			assets, err := repository.list(ctx, tt.repo, tt.release)
 			require.NoError(err)
 			require.Equal(tt.assets, assets)
 		})

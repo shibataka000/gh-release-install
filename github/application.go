@@ -55,11 +55,11 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 }
 
 func (app *ApplicationService) listAssets(ctx context.Context, repo Repository, release Release) ([]Asset, error) {
-	assets, err := app.asset.List(ctx, repo, release)
+	assets, err := app.asset.list(ctx, repo, release)
 	if err != nil {
 		return nil, err
 	}
-	externalAssets, err := app.externalAsset.List(ctx, repo, release)
+	externalAssets, err := app.externalAsset.list(ctx, repo, release)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (app *ApplicationService) Install(ctx context.Context, repoFullName string,
 		return err
 	}
 
-	assetContent, err := app.asset.Download(ctx, repo, asset, w)
+	assetContent, err := app.asset.download(ctx, repo, asset, w)
 	if err != nil {
 		return err
 	}
