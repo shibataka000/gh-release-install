@@ -7,15 +7,17 @@ import (
 
 // ApplicationService.
 type ApplicationService struct {
-	asset      IAssetRepository
-	execBinary IExecBinaryRepository
+	asset         IAssetRepository
+	externalAsset IAssetRepository
+	execBinary    IExecBinaryRepository
 }
 
 // NewApplicationService returns a new [ApplicationService] object.
-func NewApplicationService(asset IAssetRepository, execBinary IExecBinaryRepository) *ApplicationService {
+func NewApplicationService(asset IAssetRepository, externalAsset IAssetRepository, execBinary IExecBinaryRepository) *ApplicationService {
 	return &ApplicationService{
-		asset:      asset,
-		execBinary: execBinary,
+		asset:         asset,
+		externalAsset: externalAsset,
+		execBinary:    execBinary,
 	}
 }
 
@@ -34,7 +36,7 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 		return Asset{}, ExecBinary{}, err
 	}
 
-	assets, err := app.asset.List(ctx, repo, release)
+	assets, err := app.listAssets(ctx, repo, release)
 	if err != nil {
 		return Asset{}, ExecBinary{}, err
 	}
@@ -50,6 +52,18 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 	}
 
 	return asset, execBinary, nil
+}
+
+func (app *ApplicationService) listAssets(ctx context.Context, repo Repository, release Release) ([]Asset, error) {
+	assets, err := app.asset.List(ctx, repo, release)
+	if err != nil {
+		return nil, err
+	}
+	externalAssets, err := app.externalAsset.List(ctx, repo, release)
+	if err != nil {
+		return nil, err
+	}
+	return append(assets, externalAssets...), nil
 }
 
 // Install downloads a GitHub release asset, extracts an executable binary from it, and writes it into given directory.

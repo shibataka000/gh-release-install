@@ -1,7 +1,7 @@
 package github
 
-// externalAssetTemplates are known release asset templates hosted on server other than GitHub.
-var externalAssetTemplates = map[Repository][]ExternalAssetTemplate{
+// DefaultExternalAssetTemplates are known release asset templates hosted on server other than GitHub.
+var DefaultExternalAssetTemplates = map[Repository][]ExternalAssetTemplate{
 	newRepository("gravitational", "teleport"): {
 		// Linux
 		must(newExternalAssetTemplateFromString("https://cdn.teleport.dev/teleport-{{.SemVer}}-1.arm64.rpm")),

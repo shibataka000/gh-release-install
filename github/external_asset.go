@@ -57,9 +57,9 @@ type ExternalAssetRepository struct {
 }
 
 // NewExternalAssetRepository returns a new [ExternalAssetRepository] object.
-func NewExternalAssetRepository() *ExternalAssetRepository {
+func NewExternalAssetRepository(templates map[Repository][]ExternalAssetTemplate) *ExternalAssetRepository {
 	return &ExternalAssetRepository{
-		templates: maps.Clone(externalAssetTemplates),
+		templates: maps.Clone(templates),
 	}
 }
 
