@@ -2,7 +2,7 @@ package github
 
 // externalAssetTemplates are known release asset templates hosted on server other than GitHub.
 var externalAssetTemplates = map[Repository][]ExternalAssetTemplate{
-	NewRepository("gravitational", "teleport"): {
+	newRepository("gravitational", "teleport"): {
 		// Linux
 		must(newExternalAssetTemplateFromString("https://cdn.teleport.dev/teleport-{{.SemVer}}-1.arm64.rpm")),
 		must(newExternalAssetTemplateFromString("https://cdn.teleport.dev/teleport-{{.SemVer}}-1.arm.rpm")),
@@ -50,7 +50,7 @@ var externalAssetTemplates = map[Repository][]ExternalAssetTemplate{
 		// Windows
 		must(newExternalAssetTemplateFromString("https://cdn.teleport.dev/Teleport%20Connect%20Setup-{{.SemVer}}.exe")),
 	},
-	NewRepository("hashicorp", "terraform"): {
+	newRepository("hashicorp", "terraform"): {
 		must(newExternalAssetTemplateFromString("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_darwin_amd64.zip")),
 		must(newExternalAssetTemplateFromString("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_darwin_arm64.zip")),
 		must(newExternalAssetTemplateFromString("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_freebsd_386.zip")),
@@ -66,7 +66,7 @@ var externalAssetTemplates = map[Repository][]ExternalAssetTemplate{
 		must(newExternalAssetTemplateFromString("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_windows_386.zip")),
 		must(newExternalAssetTemplateFromString("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_windows_amd64.zip")),
 	},
-	NewRepository("helm", "helm"): {
+	newRepository("helm", "helm"): {
 		must(newExternalAssetTemplateFromString("https://get.helm.sh/helm-{{.Tag}}-darwin-amd64.tar.gz")),
 		must(newExternalAssetTemplateFromString("https://get.helm.sh/helm-{{.Tag}}-darwin-arm64.tar.gz")),
 		must(newExternalAssetTemplateFromString("https://get.helm.sh/helm-{{.Tag}}-linux-386.tar.gz")),
@@ -78,7 +78,7 @@ var externalAssetTemplates = map[Repository][]ExternalAssetTemplate{
 		must(newExternalAssetTemplateFromString("https://get.helm.sh/helm-{{.Tag}}-linux-s390x.tar.gz")),
 		must(newExternalAssetTemplateFromString("https://get.helm.sh/helm-{{.Tag}}-windows-amd64.zip")),
 	},
-	NewRepository("kubernetes", "kubernetes"): {
+	newRepository("kubernetes", "kubernetes"): {
 		must(newExternalAssetTemplateFromString("https://dl.k8s.io/release/{{.Tag}}/bin/darwin/amd64/kubectl")),
 		must(newExternalAssetTemplateFromString("https://dl.k8s.io/release/{{.Tag}}/bin/darwin/arm64/kubectl")),
 		must(newExternalAssetTemplateFromString("https://dl.k8s.io/release/{{.Tag}}/bin/linux/amd64/kubectl")),

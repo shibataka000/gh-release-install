@@ -42,8 +42,8 @@ func newExternalAssetTemplateFromString(downloadURL string) (ExternalAssetTempla
 func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	var buf bytes.Buffer
 	data := map[string]string{
-		"Tag":    release.Tag,
-		"SemVer": release.SemVer(),
+		"Tag":    release.tag,
+		"SemVer": release.semVer(),
 	}
 	if err := a.downloadURL.Execute(&buf, data); err != nil {
 		return Asset{}, err

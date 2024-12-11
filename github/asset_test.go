@@ -28,8 +28,8 @@ func TestAssetRepositoryList(t *testing.T) {
 	}{
 		{
 			name:    "cli/cli",
-			repo:    NewRepository("cli", "cli"),
-			release: NewRelease("v2.52.0"),
+			repo:    newRepository("cli", "cli"),
+			release: newRelease("v2.52.0"),
 			assets: []Asset{
 				must(NewAssetFromString(175682878, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_checksums.txt")),
 				must(NewAssetFromString(175682881, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_386.deb")),

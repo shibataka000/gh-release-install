@@ -121,13 +121,13 @@ func NewAssetRepository(token string) *AssetRepository {
 func (r *AssetRepository) List(ctx context.Context, repo Repository, release Release) ([]Asset, error) {
 	assets := []Asset{}
 
-	githubRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, repo.Owner, repo.Name, release.Tag)
+	githubRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, repo.owner, repo.name, release.tag)
 	if err != nil {
 		return nil, err
 	}
 
 	for page := 1; page != 0; {
-		githubAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, repo.Owner, repo.Name, githubRelease.GetID(), &github.ListOptions{
+		githubAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, repo.owner, repo.name, githubRelease.GetID(), &github.ListOptions{
 			Page: page,
 		})
 		if err != nil {
@@ -149,12 +149,12 @@ func (r *AssetRepository) List(ctx context.Context, repo Repository, release Rel
 // Download a GitHub release asset content and returns it.
 // Progress bar is written into w.
 func (r *AssetRepository) Download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error) {
-	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, repo.Owner, repo.Name, asset.ID)
+	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, repo.owner, repo.name, asset.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, repo.Owner, repo.Name, asset.ID, http.DefaultClient)
+	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, repo.owner, repo.name, asset.ID, http.DefaultClient)
 	if err != nil {
 		return nil, err
 	}

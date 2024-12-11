@@ -17,13 +17,13 @@ func TestExternalAssetTemplateExecute(t *testing.T) {
 		{
 			name:     "https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip",
 			template: must(newExternalAssetTemplateFromString("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_linux_amd64.zip")),
-			release:  NewRelease("v1.9.0"),
+			release:  newRelease("v1.9.0"),
 			asset:    must(NewAssetFromString(0, "https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip")),
 		},
 		{
 			name:     "https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz",
 			template: must(newExternalAssetTemplateFromString("https://get.helm.sh/helm-{{.Tag}}-linux-amd64.tar.gz")),
-			release:  NewRelease("v3.16.2"),
+			release:  newRelease("v3.16.2"),
 			asset:    must(NewAssetFromString(0, "https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz")),
 		},
 	}
@@ -47,8 +47,8 @@ func TestExternalAssetRepositoryList(t *testing.T) {
 	}{
 		{
 			name:    "hashicorp/terraform",
-			repo:    NewRepository("hashicorp", "terraform"),
-			release: NewRelease("v1.9.0"),
+			repo:    newRepository("hashicorp", "terraform"),
+			release: newRelease("v1.9.0"),
 			assets: []Asset{
 				must(NewAssetFromString(0, "https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_darwin_amd64.zip")),
 				must(NewAssetFromString(0, "https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_darwin_arm64.zip")),
@@ -68,8 +68,8 @@ func TestExternalAssetRepositoryList(t *testing.T) {
 		},
 		{
 			name:    "helm/helm",
-			repo:    NewRepository("helm", "helm"),
-			release: NewRelease("v3.16.2"),
+			repo:    newRepository("helm", "helm"),
+			release: newRelease("v3.16.2"),
 			assets: []Asset{
 				must(NewAssetFromString(0, "https://get.helm.sh/helm-v3.16.2-darwin-amd64.tar.gz")),
 				must(NewAssetFromString(0, "https://get.helm.sh/helm-v3.16.2-darwin-arm64.tar.gz")),

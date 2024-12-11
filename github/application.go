@@ -22,12 +22,12 @@ func NewApplicationService(asset IAssetRepository, execBinary IExecBinaryReposit
 // Find a GitHub release asset and an executable binary and returns them.
 // See [newRepositoryFromFullName], [newRelease], [newPatternArrayFromStringMap] for details about each arguments.
 func (app *ApplicationService) Find(ctx context.Context, repoFullName string, tag string, patterns map[string]string) (Asset, ExecBinary, error) {
-	repo, err := NewRepositoryFromFullName(repoFullName)
+	repo, err := newRepositoryFromFullName(repoFullName)
 	if err != nil {
 		return Asset{}, ExecBinary{}, err
 	}
 
-	release := NewRelease(tag)
+	release := newRelease(tag)
 
 	ps, err := newPatternArrayFromStringMap(patterns)
 	if err != nil {
@@ -55,7 +55,7 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 // Install downloads a GitHub release asset, extracts an executable binary from it, and writes it into given directory.
 // Progress bar is written into w when downloading a GitHub release asset.
 func (app *ApplicationService) Install(ctx context.Context, repoFullName string, asset Asset, execBinary ExecBinary, dir string, w io.Writer) error {
-	repo, err := NewRepositoryFromFullName(repoFullName)
+	repo, err := newRepositoryFromFullName(repoFullName)
 	if err != nil {
 		return err
 	}
