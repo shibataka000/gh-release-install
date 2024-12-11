@@ -18,28 +18,28 @@ import (
 
 // Asset represents a GitHub release asset.
 type Asset struct {
-	// ID. If asset is hosted on server other than GitHub, this should be 0.
-	ID int64
+	// id. If asset is hosted on server other than GitHub, this should be 0.
+	id int64
 
 	// DownloadURL is an URL to download an asset content.
 	DownloadURL *url.URL
 }
 
-// NewAsset returns a new [Asset] object.
-func NewAsset(id int64, downloadURL *url.URL) Asset {
+// newAsset returns a new [Asset] object.
+func newAsset(id int64, downloadURL *url.URL) Asset {
 	return Asset{
-		ID:          id,
+		id:          id,
 		DownloadURL: downloadURL,
 	}
 }
 
-// NewAssetFromString returns a new [Asset] object.
-func NewAssetFromString(id int64, downloadURL string) (Asset, error) {
+// newAssetFromString returns a new [Asset] object.
+func newAssetFromString(id int64, downloadURL string) (Asset, error) {
 	parsed, err := url.Parse(downloadURL)
 	if err != nil {
 		return Asset{}, err
 	}
-	return NewAsset(id, parsed), nil
+	return newAsset(id, parsed), nil
 }
 
 // AssetContent represents a GitHub release asset content.
@@ -134,7 +134,7 @@ func (r *AssetRepository) List(ctx context.Context, repo Repository, release Rel
 			return nil, err
 		}
 		for _, githubAsset := range githubAssets {
-			asset, err := NewAssetFromString(githubAsset.GetID(), githubAsset.GetBrowserDownloadURL())
+			asset, err := newAssetFromString(githubAsset.GetID(), githubAsset.GetBrowserDownloadURL())
 			if err != nil {
 				return nil, err
 			}
@@ -149,12 +149,12 @@ func (r *AssetRepository) List(ctx context.Context, repo Repository, release Rel
 // Download a GitHub release asset content and returns it.
 // Progress bar is written into w.
 func (r *AssetRepository) Download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error) {
-	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, repo.owner, repo.name, asset.ID)
+	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, repo.owner, repo.name, asset.id)
 	if err != nil {
 		return nil, err
 	}
 
-	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, repo.owner, repo.name, asset.ID, http.DefaultClient)
+	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, repo.owner, repo.name, asset.id, http.DefaultClient)
 	if err != nil {
 		return nil, err
 	}

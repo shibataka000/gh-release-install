@@ -14,7 +14,7 @@ import (
 // newExternalAssetFromString return a new [Asset] object hosted on server other than GitHub.
 func newExternalAssetFromString(downloadURL string) (Asset, error) {
 	// ID should be 0. See [Asset] for more details.
-	return NewAssetFromString(0, downloadURL)
+	return newAssetFromString(0, downloadURL)
 }
 
 // ExternalAssetTemplate is a template of [Asset] hosted on server other than GitHub.

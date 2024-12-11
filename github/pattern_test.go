@@ -16,13 +16,13 @@ func TestPatternMatch(t *testing.T) {
 		{
 			name:    "Match",
 			pattern: must(newPatternFromString(`https://github\.com/cli/cli/releases/download/.+/gh_.+_linux_amd64\.tar\.gz`, "gh")),
-			asset:   must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
+			asset:   must(newAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
 			match:   true,
 		},
 		{
 			name:    "NotMatch",
 			pattern: must(newPatternFromString(`https://github\.com/cli/cli/releases/download/.+/gh_.+_linux_amd64\.tar\.gz`, "gh")),
-			asset:   must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.tar.gz")),
+			asset:   must(newAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.tar.gz")),
 			match:   false,
 		},
 	}
@@ -77,14 +77,14 @@ func TestPatternExecute(t *testing.T) {
 		{
 			name:       "CapturingGroup",
 			pattern:    must(newPatternFromString(`https://github\.com/cli/cli/releases/download/.+/(\w+)_[\d\.]+_linux_amd64\.tar\.gz`, `{{index . "1"}}`)),
-			asset:      must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
-			execBinary: NewExecBinary("gh"),
+			asset:      must(newAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
+			execBinary: newExecBinary("gh"),
 		},
 		{
 			name:       "NamedCapturingGroup",
 			pattern:    must(newPatternFromString(`https://github\.com/cli/cli/releases/download/.+/(?P<name>\w+)_[\d\.]+_linux_amd64\.tar\.gz`, "{{.name}}")),
-			asset:      must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
-			execBinary: NewExecBinary("gh"),
+			asset:      must(newAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
+			execBinary: newExecBinary("gh"),
 		},
 	}
 
@@ -109,14 +109,14 @@ func TestFind(t *testing.T) {
 		{
 			name: "FindMatchingAssetAndPattern",
 			assets: []Asset{
-				must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
-				must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.tar.gz")),
+				must(newAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
+				must(newAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.tar.gz")),
 			},
 			patterns: []Pattern{
 				must(newPatternFromString(`https://github\.com/cli/cli/releases/download/.+/gh_.+_linux_amd64\.tar\.gz`, "gh")),
 				must(newPatternFromString(`https://github\.com/istio/istio/releases/download/.+/istioctl-.+-linux-amd64\.tar\.gz`, "istioctl")),
 			},
-			asset:   must(NewAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
+			asset:   must(newAssetFromString(0, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
 			pattern: must(newPatternFromString(`https://github\.com/cli/cli/releases/download/.+/gh_.+_linux_amd64\.tar\.gz`, "gh")),
 		},
 	}
