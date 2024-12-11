@@ -22,7 +22,7 @@ type ExecBinaryContent []byte
 
 // IExecBinaryRepository is an interface about repository for [ExecBinary] and [ExecBinaryContent].
 type IExecBinaryRepository interface {
-	Write(meta ExecBinary, content ExecBinaryContent, dir string) error
+	write(meta ExecBinary, content ExecBinaryContent, dir string) error
 }
 
 // ExecBinaryRepository is a repository for [ExecBinary] and [ExecBinaryContent].
@@ -34,7 +34,7 @@ func NewExecBinaryRepository() *ExecBinaryRepository {
 }
 
 // Write [ExecBinaryContent] into file in given directory.
-func (r *ExecBinaryRepository) Write(meta ExecBinary, content ExecBinaryContent, dir string) error {
+func (r *ExecBinaryRepository) write(meta ExecBinary, content ExecBinaryContent, dir string) error {
 	path := filepath.Join(dir, meta.Name)
 	return os.WriteFile(path, content, 0755)
 }

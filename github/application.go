@@ -84,5 +84,5 @@ func (app *ApplicationService) Install(ctx context.Context, repoFullName string,
 		return err
 	}
 
-	return app.execBinary.Write(execBinary, execBinaryContent, dir)
+	return app.execBinary.write(execBinary, execBinaryContent, dir)
 }
