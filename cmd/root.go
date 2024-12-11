@@ -28,10 +28,7 @@ func NewCommand() *cobra.Command {
 		Short: "Install executable binary from GitHub release asset.",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			ctx := context.Background()
-			app := github.NewApplicationService(
-				github.NewAssetRepository(token),
-				github.NewExecBinaryRepository(),
-			)
+			app := newApplicationService(token)
 			asset, execBinary, err := app.Find(ctx, repoFullName, tag, patterns)
 			if err != nil {
 				return err
@@ -67,4 +64,12 @@ func markFlagRequired(command *cobra.Command, name string, defaultValue string) 
 	if err := command.MarkFlagRequired(name); err != nil {
 		panic(err)
 	}
+}
+
+// newApplicationService returns a new [github.com/shibataka000/gh-release-install/github.ApplicationService] object.
+func newApplicationService(token string) *github.ApplicationService {
+	return github.NewApplicationService(
+		github.NewAssetRepository(token),
+		github.NewExecBinaryRepository(),
+	)
 }
