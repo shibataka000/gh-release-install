@@ -26,3 +26,7 @@ Flags:
 ```
 go install github.com/shibataka000/gh-release-install@main
 ```
+
+## To Do
+
+- [ ] are NOT hosted on GitHub

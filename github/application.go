@@ -20,7 +20,7 @@ func NewApplicationService(asset IAssetRepository, execBinary IExecBinaryReposit
 }
 
 // Find a GitHub release asset and an executable binary and returns them.
-// See [newRepositoryFromFullName], [newRelease], [newPatternArrayFromStringMap] for details about each arguments.
+// See [newRepositoryFromFullName], [newRelease], [newPatternArrayFromStringMap] for details about each arguments. <- fixme
 func (app *ApplicationService) Find(ctx context.Context, repoFullName string, tag string, patterns map[string]string) (Asset, ExecBinary, error) {
 	repo, err := newRepositoryFromFullName(repoFullName)
 	if err != nil {
