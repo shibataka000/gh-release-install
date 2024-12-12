@@ -69,7 +69,7 @@ func (p Pattern) priority() int {
 	return len(prefix)
 }
 
-// execute applies a template of executable binary name to values of capturing group in regular expression of GitHub release asset download URL and returns [ExecBinary] object.
+// execute applies a template of executable binary name to values of capturing groups in regular expression of GitHub release asset download URL and returns [ExecBinary] object.
 func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 	data := map[string]string{}
 	submatch := p.asset.FindStringSubmatch(asset.DownloadURL.String())
@@ -90,7 +90,7 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 		return ExecBinary{}, err
 	}
 
-	return NewExecBinary(b.String()), nil
+	return newExecBinary(b.String()), nil
 }
 
 // find matching [Asset] and [Pattern] and returns them.
