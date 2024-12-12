@@ -28,30 +28,30 @@ func TestAssetRepositoryList(t *testing.T) {
 	}{
 		{
 			name:    "cli/cli",
-			repo:    NewRepository("cli", "cli"),
-			release: NewRelease("v2.52.0"),
+			repo:    newRepository("cli", "cli"),
+			release: newRelease("v2.52.0"),
 			assets: []Asset{
-				must(NewAssetFromString(175682878, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_checksums.txt")),
-				must(NewAssetFromString(175682881, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_386.deb")),
-				must(NewAssetFromString(175682882, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_386.rpm")),
-				must(NewAssetFromString(175682880, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_386.tar.gz")),
-				must(NewAssetFromString(175682879, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb")),
-				must(NewAssetFromString(175682883, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm")),
-				must(NewAssetFromString(175682889, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
-				must(NewAssetFromString(175682892, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.deb")),
-				must(NewAssetFromString(175682891, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.rpm")),
-				must(NewAssetFromString(175682895, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.tar.gz")),
-				must(NewAssetFromString(175682896, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_armv6.deb")),
-				must(NewAssetFromString(175682899, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_armv6.rpm")),
-				must(NewAssetFromString(175682905, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_armv6.tar.gz")),
-				must(NewAssetFromString(175682903, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_macOS_amd64.zip")),
-				must(NewAssetFromString(175682902, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_macOS_arm64.zip")),
-				must(NewAssetFromString(175682904, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_macOS_universal.pkg")),
-				must(NewAssetFromString(175682911, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_386.msi")),
-				must(NewAssetFromString(175682913, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_386.zip")),
-				must(NewAssetFromString(175682914, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_amd64.msi")),
-				must(NewAssetFromString(175682915, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_amd64.zip")),
-				must(NewAssetFromString(175682917, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_arm64.zip")),
+				must(newAssetFromString(175682878, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_checksums.txt")),
+				must(newAssetFromString(175682881, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_386.deb")),
+				must(newAssetFromString(175682882, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_386.rpm")),
+				must(newAssetFromString(175682880, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_386.tar.gz")),
+				must(newAssetFromString(175682879, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.deb")),
+				must(newAssetFromString(175682883, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.rpm")),
+				must(newAssetFromString(175682889, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
+				must(newAssetFromString(175682892, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.deb")),
+				must(newAssetFromString(175682891, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.rpm")),
+				must(newAssetFromString(175682895, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_arm64.tar.gz")),
+				must(newAssetFromString(175682896, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_armv6.deb")),
+				must(newAssetFromString(175682899, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_armv6.rpm")),
+				must(newAssetFromString(175682905, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_armv6.tar.gz")),
+				must(newAssetFromString(175682903, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_macOS_amd64.zip")),
+				must(newAssetFromString(175682902, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_macOS_arm64.zip")),
+				must(newAssetFromString(175682904, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_macOS_universal.pkg")),
+				must(newAssetFromString(175682911, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_386.msi")),
+				must(newAssetFromString(175682913, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_386.zip")),
+				must(newAssetFromString(175682914, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_amd64.msi")),
+				must(newAssetFromString(175682915, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_amd64.zip")),
+				must(newAssetFromString(175682917, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_windows_arm64.zip")),
 			},
 		},
 	}
@@ -61,7 +61,7 @@ func TestAssetRepositoryList(t *testing.T) {
 			require := require.New(t)
 			ctx := context.Background()
 			repository := NewAssetRepository(githubTokenForTest)
-			assets, err := repository.List(ctx, tt.repo, tt.release)
+			assets, err := repository.list(ctx, tt.repo, tt.release)
 			require.NoError(err)
 			require.Equal(tt.assets, assets)
 		})

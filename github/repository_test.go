@@ -15,14 +15,14 @@ func TestNewRepositoryFromFullName(t *testing.T) {
 		{
 			name:     "hashicorp/terraform",
 			fullName: "hashicorp/terraform",
-			repo:     NewRepository("hashicorp", "terraform"),
+			repo:     newRepository("hashicorp", "terraform"),
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require := require.New(t)
-			repo, err := NewRepositoryFromFullName(tt.fullName)
+			repo, err := newRepositoryFromFullName(tt.fullName)
 			require.NoError(err)
 			require.Equal(tt.repo, repo)
 		})
