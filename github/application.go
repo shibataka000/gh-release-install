@@ -7,6 +7,7 @@ import (
 
 // ApplicationService.
 type ApplicationService struct {
+	repository    *RepositoryRepository
 	asset         *AssetRepository
 	externalAsset *ExternalAssetRepository
 	execBinary    *ExecBinaryRepository
@@ -78,7 +79,16 @@ func newFindResult(repo Repository, release Release, asset Asset, execBinary Exe
 	}
 }
 
-func (app *ApplicationService) findRepository(ctx context.Context, query string) (Repository, error)
+func (app *ApplicationService) findRepository(ctx context.Context, query string) (Repository, error) {
+	parsed, err := parseRepositoryName(query)
+	if err != nil {
+		repo, err := app.repository.get(ctx, parsed.owner, parsed.name)
+		if err == nil {
+			return repo, nil
+		}
+	}
+	return app.repository.search(ctx, query)
+}
 
 // findAssetAndPattern finds a GitHub release asset in given GitHub release which matches any of given patterns and returns them.
 func (app *ApplicationService) findAssetAndPattern(ctx context.Context, repo Repository, release Release, patterns map[string]string) (Asset, Pattern, error) {

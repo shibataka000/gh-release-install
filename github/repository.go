@@ -1,6 +1,8 @@
 package github
 
 import (
+	"regexp"
+
 	"github.com/google/go-github/v62/github"
 	"golang.org/x/net/context"
 )
@@ -56,3 +58,9 @@ func (r *RepositoryRepository) search(ctx context.Context, query string) (Reposi
 	repo := result.Repositories[0]
 	return newRepository(repo.GetOwner().GetLogin(), repo.GetName()), nil
 }
+
+func parseRepositoryName(name string) (Repository, error) {
+	return newRepository("", ""), nil
+}
+
+var repositoryNameFormat = regexp.MustCompile("")

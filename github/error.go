@@ -9,4 +9,6 @@ var (
 	ErrNoAssetsMatchPatterns = errors.New("no release assets matched given patterns")
 	// ErrNotFound means something was not found.
 	ErrNotFound = errors.New("not found")
+
+	ErrParsingRepositoryFullNameFailure = errors.New("")
 )
