@@ -28,13 +28,18 @@ func newRepositoryFromFullName(fullName string) (Repository, error) {
 	if !repositoryFullNameFormat.MatchString(fullName) {
 		return Repository{}, fmt.Errorf("%w: %s", ErrInvalidRepositoryFullName, fullName)
 	}
-	var owner, name string
+
 	submatch := repositoryFullNameFormat.FindStringSubmatch(fullName)
-	if index := repositoryFullNameFormat.SubexpIndex("owner"); index >= 0 && index < len(submatch) {
-		owner = submatch[index]
+
+	owner, err := getSubexpValue(repositoryFullNameFormat, submatch, "owner")
+	if err != nil {
+		return Repository{}, err
 	}
-	if index := repositoryFullNameFormat.SubexpIndex("name"); index >= 0 && index < len(submatch) {
-		name = submatch[index]
+
+	name, err := getSubexpValue(repositoryFullNameFormat, submatch, "name")
+	if err != nil {
+		return Repository{}, err
 	}
+
 	return newRepository(owner, name), nil
 }
