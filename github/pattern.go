@@ -80,9 +80,10 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 
 	for _, name := range p.asset.SubexpNames() {
 		index := p.asset.SubexpIndex(name)
-		if index >= 0 && index < len(submatch) {
-			data[name] = submatch[index]
+		if index < 0 && index >= len(submatch) {
+			return ExecBinary{}, errOutOfIndex
 		}
+		data[name] = submatch[index]
 	}
 
 	var b bytes.Buffer

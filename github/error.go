@@ -9,4 +9,7 @@ var (
 	ErrUnexpectedMIMEType = errors.New("MIME type of asset content was unexpected")
 	// ErrNoAssetsMatchPattern means that no assets match the pattern.
 	ErrNoAssetsMatchPattern = errors.New("no assets match the pattern")
+
+	// errOutOfIndex means that out of index.
+	errOutOfIndex = errors.New("out of index")
 )
