@@ -92,7 +92,7 @@ func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, 
 		r, err := newFileReaderInZip(br, br.Size(), execBinary.Name)
 		return r, r, err
 	default:
-		return nil, nil, fmt.Errorf("%w: %s", ErrUnexpectedMIME, mime.String())
+		return nil, nil, fmt.Errorf("%w: %s", ErrUnexpectedMIMEType, mime.String())
 	}
 }
 
