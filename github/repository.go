@@ -31,17 +31,15 @@ func newRepositoryFromFullName(fullName string) (Repository, error) {
 
 	submatch := repositoryFullNameFormat.FindStringSubmatch(fullName)
 
-	ownerSubexpIndex := repositoryFullNameFormat.SubexpIndex("owner")
-	if ownerSubexpIndex < 0 && ownerSubexpIndex >= len(submatch) {
-		return Repository{}, errOutOfIndex
+	owner, err := getSubexpValue(repositoryFullNameFormat, submatch, "owner")
+	if err != nil {
+		return Repository{}, err
 	}
-	owner := submatch[ownerSubexpIndex]
 
-	nameSubexpIndex := repositoryFullNameFormat.SubexpIndex("name")
-	if nameSubexpIndex < 0 && nameSubexpIndex >= len(submatch) {
-		return Repository{}, errOutOfIndex
+	name, err := getSubexpValue(repositoryFullNameFormat, submatch, "name")
+	if err != nil {
+		return Repository{}, err
 	}
-	name := submatch[nameSubexpIndex]
 
 	return newRepository(owner, name), nil
 }
