@@ -109,5 +109,5 @@ func find(assets []Asset, patterns []Pattern) (Asset, Pattern, error) {
 		}
 	}
 
-	return Asset{}, Pattern{}, ErrNoAssetsMatchPatterns
+	return Asset{}, Pattern{}, ErrNoAssetsMatchPattern
 }

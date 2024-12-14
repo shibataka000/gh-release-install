@@ -3,10 +3,10 @@ package github
 import "errors"
 
 var (
-	// ErrInvalidRepositoryFullName is returned when given repository full name is not 'OWNER/REPO' format.
-	ErrInvalidRepositoryFullName = errors.New("repository full name was not 'OWNER/REPO' format")
-	// ErrUnexpectedMIME is returned when MIME of release asset content is unexpected.
-	ErrUnexpectedMIME = errors.New("unexpected mime type")
-	// ErrNoAssetsMatchPatterns is returned when no release assets matched given patterns.
-	ErrNoAssetsMatchPatterns = errors.New("no release assets matched given patterns")
+	// ErrInvalidRepositoryFullName means that given repository name was not 'OWNER/REPO' format.
+	ErrInvalidRepositoryFullName = errors.New("given repository name was not 'OWNER/REPO' format")
+	// ErrUnexpectedMIMEType means that MIME type of asset content was unexpected.
+	ErrUnexpectedMIMEType = errors.New("MIME type of asset content was unexpected")
+	// ErrNoAssetsMatchPattern means that no assets match the pattern.
+	ErrNoAssetsMatchPattern = errors.New("no assets match the pattern")
 )
