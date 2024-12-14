@@ -6,7 +6,7 @@ require (
 	github.com/Songmu/prompter v0.5.1
 	github.com/cheggaaa/pb/v3 v3.1.5
 	github.com/gabriel-vasile/mimetype v1.4.7
-	github.com/google/go-github/v62 v62.0.0
+	github.com/google/go-github/v67 v67.0.0
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.10.0
 	github.com/ulikunitz/xz v0.5.12

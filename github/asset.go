@@ -12,7 +12,7 @@ import (
 
 	"github.com/cheggaaa/pb/v3"
 	"github.com/gabriel-vasile/mimetype"
-	"github.com/google/go-github/v62/github"
+	"github.com/google/go-github/v67/github"
 	"github.com/ulikunitz/xz"
 )
 
