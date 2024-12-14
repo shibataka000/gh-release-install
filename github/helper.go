@@ -32,5 +32,5 @@ func getSubexpValue(re *regexp.Regexp, submatch []string, name string) (string, 
 	if i := re.SubexpIndex(name); i >= 0 && i < len(submatch) {
 		return submatch[i], nil
 	}
-	return "", errOutOfIndex
+	return "", errGettingSubexpValueFailure
 }

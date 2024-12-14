@@ -10,6 +10,6 @@ var (
 	// ErrNoAssetsMatchPattern means that no assets match the pattern.
 	ErrNoAssetsMatchPattern = errors.New("no assets match the pattern")
 
-	// errOutOfIndex means that out of index.
-	errOutOfIndex = errors.New("out of index")
+	// errGettingSubexpValueFailure means that getting value of subexp in regexp was failed.
+	errGettingSubexpValueFailure = errors.New("getting value of subexp in regexp was failed")
 )
