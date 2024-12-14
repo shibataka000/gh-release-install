@@ -9,7 +9,4 @@ var (
 	ErrUnexpectedMIMEType = errors.New("MIME type of asset content was unexpected")
 	// ErrNoAssetsMatchPattern means that no assets match the pattern.
 	ErrNoAssetsMatchPattern = errors.New("no assets match the pattern")
-
-	// errGettingSubexpValueFailure means that getting value of subexp in regexp was failed.
-	errGettingSubexpValueFailure = errors.New("getting value of subexp in regexp was failed")
 )
