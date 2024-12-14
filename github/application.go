@@ -22,7 +22,8 @@ func NewApplicationService(asset *AssetRepository, externalAsset *ExternalAssetR
 }
 
 // Find a GitHub release asset and an executable binary and returns them.
-// See [newRepositoryFromFullName], [newRelease], [newPatternArrayFromStringMap] for details about each arguments.
+// repoFullName should be 'OWNER/REPO' format.
+// patterns should be map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.
 func (app *ApplicationService) Find(ctx context.Context, repoFullName string, tag string, patterns map[string]string) (FindResult, error) {
 	repo, err := newRepositoryFromFullName(repoFullName)
 	if err != nil {
