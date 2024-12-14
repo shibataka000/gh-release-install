@@ -98,7 +98,7 @@ func TestPatternExecute(t *testing.T) {
 	}
 }
 
-func TestFind(t *testing.T) {
+func TestFindAssetAndPattern(t *testing.T) {
 	tests := []struct {
 		name     string
 		assets   []Asset
@@ -124,7 +124,7 @@ func TestFind(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require := require.New(t)
-			asset, pattern, err := find(tt.assets, tt.patterns)
+			asset, pattern, err := findAssetAndPattern(tt.assets, tt.patterns)
 			require.NoError(err)
 			require.Equal(tt.asset, asset)
 			require.Equal(tt.pattern, pattern)
