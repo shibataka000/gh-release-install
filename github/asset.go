@@ -104,7 +104,7 @@ type AssetRepository struct {
 // NewAssetRepository returns a new [AssetRepository] object.
 func NewAssetRepository(token string) *AssetRepository {
 	return &AssetRepository{
-		client: github.NewClient(http.DefaultClient).WithAuthToken(token),
+		client: newGitHubClient(token),
 	}
 }
 

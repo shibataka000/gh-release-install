@@ -24,7 +24,7 @@ func NewApplicationService(asset *AssetRepository, externalAsset *ExternalAssetR
 // Find a GitHub release asset and an executable binary and returns them.
 // See [newRepositoryFromFullName], [newRelease], [newPatternArrayFromStringMap] for details about each arguments.
 func (app *ApplicationService) Find(ctx context.Context, repoFullName string, tag string, patterns map[string]string) (Asset, ExecBinary, error) {
-	repo, err := newRepositoryFromFullName(repoFullName)
+	repo, err := app.findRepository(ctx, repoFullName)
 	if err != nil {
 		return Asset{}, ExecBinary{}, err
 	}
@@ -64,6 +64,8 @@ func (app *ApplicationService) Install(ctx context.Context, repoFullName string,
 
 	return app.install(execBinary, execBinaryContent, dir)
 }
+
+func (app *ApplicationService) findRepository(ctx context.Context, query string) (Repository, error)
 
 // findAssetAndPattern finds a GitHub release asset in given GitHub release which matches any of given patterns and returns them.
 func (app *ApplicationService) findAssetAndPattern(ctx context.Context, repo Repository, release Release, patterns map[string]string) (Asset, Pattern, error) {
