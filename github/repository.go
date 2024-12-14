@@ -25,21 +25,12 @@ func newRepository(owner string, name string) Repository {
 // newRepositoryFromFullName returns a new [Repository] object from repository full name.
 // Repository full name should be 'OWNER/REPO' format.
 func newRepositoryFromFullName(fullName string) (Repository, error) {
-	if !repositoryFullNameFormat.MatchString(fullName) {
+	format := repositoryFullNameFormat
+	if !format.MatchString(fullName) {
 		return Repository{}, fmt.Errorf("%w: %s", ErrInvalidRepositoryFullName, fullName)
 	}
-
-	submatch := repositoryFullNameFormat.FindStringSubmatch(fullName)
-
-	owner, err := getSubexpValue(repositoryFullNameFormat, submatch, "owner")
-	if err != nil {
-		return Repository{}, err
-	}
-
-	name, err := getSubexpValue(repositoryFullNameFormat, submatch, "name")
-	if err != nil {
-		return Repository{}, err
-	}
-
+	submatch := format.FindStringSubmatch(fullName)
+	owner := submatch[format.SubexpIndex("owner")]
+	name := submatch[format.SubexpIndex("name")]
 	return newRepository(owner, name), nil
 }

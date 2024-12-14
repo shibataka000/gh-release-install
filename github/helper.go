@@ -3,7 +3,6 @@ package github
 import (
 	"os"
 	"os/exec"
-	"regexp"
 	"testing"
 )
 
@@ -25,12 +24,4 @@ func must[E any](e E, err error) E {
 		panic(err)
 	}
 	return e
-}
-
-// getSubexpValue returns value of subexp in regular expression.
-func getSubexpValue(re *regexp.Regexp, submatch []string, name string) (string, error) {
-	if i := re.SubexpIndex(name); i >= 0 && i < len(submatch) {
-		return submatch[i], nil
-	}
-	return "", errGettingSubexpValueFailure
 }
