@@ -79,6 +79,9 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 	}
 
 	for _, name := range p.asset.SubexpNames() {
+		if name == "" {
+			continue
+		}
 		index := p.asset.SubexpIndex(name)
 		if index < 0 && index >= len(submatch) {
 			return ExecBinary{}, errOutOfIndex
