@@ -23,46 +23,59 @@ func NewApplicationService(asset *AssetRepository, externalAsset *ExternalAssetR
 
 // Find a GitHub release asset and an executable binary and returns them.
 // See [newRepositoryFromFullName], [newRelease], [newPatternArrayFromStringMap] for details about each arguments.
-func (app *ApplicationService) Find(ctx context.Context, repoFullName string, tag string, patterns map[string]string) (Asset, ExecBinary, error) {
+func (app *ApplicationService) Find(ctx context.Context, repoFullName string, tag string, patterns map[string]string) (FindResult, error) {
 	repo, err := app.findRepository(ctx, repoFullName)
 	if err != nil {
-		return Asset{}, ExecBinary{}, err
+		return FindResult{}, err
 	}
 
 	release := newRelease(tag)
 
 	asset, pattern, err := app.findAssetAndPattern(ctx, repo, release, patterns)
 	if err != nil {
-		return Asset{}, ExecBinary{}, err
+		return FindResult{}, err
 	}
 
 	execBinary, err := app.findExecBinary(asset, pattern)
 	if err != nil {
-		return Asset{}, ExecBinary{}, err
+		return FindResult{}, err
 	}
 
-	return asset, execBinary, nil
+	return newFindResult(repo, release, asset, execBinary), nil
 }
 
 // Install downloads a GitHub release asset, extracts an executable binary from it, and writes it into given directory.
 // Progress bar is written into w when downloading a GitHub release asset.
-func (app *ApplicationService) Install(ctx context.Context, repoFullName string, asset Asset, execBinary ExecBinary, dir string, w io.Writer) error {
-	repo, err := newRepositoryFromFullName(repoFullName)
+func (app *ApplicationService) Install(ctx context.Context, result FindResult, dir string, w io.Writer) error {
+	assetContent, err := app.download(ctx, result.repo, result.Asset, w)
 	if err != nil {
 		return err
 	}
 
-	assetContent, err := app.download(ctx, repo, asset, w)
+	execBinaryContent, err := app.extract(assetContent, result.ExecBinary)
 	if err != nil {
 		return err
 	}
 
-	execBinaryContent, err := app.extract(assetContent, execBinary)
-	if err != nil {
-		return err
-	}
+	return app.install(result.ExecBinary, execBinaryContent, dir)
+}
 
-	return app.install(execBinary, execBinaryContent, dir)
+// FindResult represents the result of [ApplicationService.Find].
+type FindResult struct {
+	repo       Repository
+	release    Release
+	Asset      Asset
+	ExecBinary ExecBinary
+}
+
+// newFindResult returns a new [FindResult] object.
+func newFindResult(repo Repository, release Release, asset Asset, execBinary ExecBinary) FindResult {
+	return FindResult{
+		repo:       repo,
+		release:    release,
+		Asset:      asset,
+		ExecBinary: execBinary,
+	}
 }
 
 func (app *ApplicationService) findRepository(ctx context.Context, query string) (Repository, error)
