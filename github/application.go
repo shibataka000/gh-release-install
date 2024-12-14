@@ -31,12 +31,22 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 
 	release := newRelease(tag)
 
-	asset, pattern, err := app.findAssetAndPattern(ctx, repo, release, patterns)
+	ps, err := newPatternArrayFromStringMap(patterns)
 	if err != nil {
 		return FindResult{}, err
 	}
 
-	execBinary, err := app.findExecBinary(asset, pattern)
+	assets, err := app.listAssets(ctx, repo, release)
+	if err != nil {
+		return FindResult{}, err
+	}
+
+	asset, pattern, err := find(assets, ps)
+	if err != nil {
+		return FindResult{}, err
+	}
+
+	execBinary, err := pattern.execute(asset)
 	if err != nil {
 		return FindResult{}, err
 	}
@@ -52,32 +62,12 @@ func (app *ApplicationService) Install(ctx context.Context, result FindResult, d
 		return err
 	}
 
-	execBinaryContent, err := app.extract(assetContent, result.ExecBinary)
+	execBinaryContent, err := assetContent.extract(result.ExecBinary)
 	if err != nil {
 		return err
 	}
 
-	return app.install(result.ExecBinary, execBinaryContent, dir)
-}
-
-// findAssetAndPattern finds a GitHub release asset in given GitHub release which matches any of given patterns and returns them.
-func (app *ApplicationService) findAssetAndPattern(ctx context.Context, repo Repository, release Release, patterns map[string]string) (Asset, Pattern, error) {
-	assets, err := app.listAssets(ctx, repo, release)
-	if err != nil {
-		return Asset{}, Pattern{}, err
-	}
-
-	ps, err := newPatternArrayFromStringMap(patterns)
-	if err != nil {
-		return Asset{}, Pattern{}, err
-	}
-
-	return find(assets, ps)
-}
-
-// findExecBinary makes [ExecBinary] object from [Asset] and [Pattern] and returns it.
-func (app *ApplicationService) findExecBinary(asset Asset, pattern Pattern) (ExecBinary, error) {
-	return pattern.execute(asset)
+	return app.execBinary.write(result.ExecBinary, execBinaryContent, dir)
 }
 
 // listAssets lists GitHub release assets in given GitHub release and returns them.
@@ -101,16 +91,6 @@ func (app *ApplicationService) download(ctx context.Context, repo Repository, as
 		return app.externalAsset.download(asset, w)
 	}
 	return app.asset.download(ctx, repo, asset, w)
-}
-
-// extract [ExecBinaryContent] from [AssetContent] and returns it.
-func (app *ApplicationService) extract(asset AssetContent, execBinary ExecBinary) (ExecBinaryContent, error) {
-	return asset.extract(execBinary)
-}
-
-// install [ExecBinaryContent] into given directory.
-func (app *ApplicationService) install(meta ExecBinary, content ExecBinaryContent, dir string) error {
-	return app.execBinary.write(meta, content, dir)
 }
 
 // FindResult represents the result of [ApplicationService.Find].
