@@ -29,15 +29,15 @@ func NewCommand() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			ctx := context.Background()
 			app := newApplicationService(token)
-			asset, execBinary, err := app.Find(ctx, repoFullName, tag, patterns)
+			result, err := app.Find(ctx, repoFullName, tag, patterns)
 			if err != nil {
 				return err
 			}
-			message := fmt.Sprintf("Do you want to install %s from %s ?", execBinary.Name, asset.DownloadURL.String())
+			message := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
 			if !prompter.YN(message, true) {
 				return nil
 			}
-			return app.Install(ctx, repoFullName, asset, execBinary, dir, os.Stdout)
+			return app.Install(ctx, result, dir, os.Stdout)
 		},
 		SilenceErrors: true,
 		SilenceUsage:  true,
