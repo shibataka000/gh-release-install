@@ -93,9 +93,9 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 	return newExecBinary(b.String()), nil
 }
 
-// find matching [Asset] and [Pattern] and returns them.
+// findAssetAndPattern find [Asset] and [Pattern] matching and returns them.
 // Pattern with higher priority is prioritized over pattern with lower priority.
-func find(assets []Asset, patterns []Pattern) (Asset, Pattern, error) {
+func findAssetAndPattern(assets []Asset, patterns []Pattern) (Asset, Pattern, error) {
 	cloned := slices.Clone(patterns)
 	slices.SortFunc(cloned, func(p1, p2 Pattern) int {
 		return p2.priority() - p1.priority()

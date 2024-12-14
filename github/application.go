@@ -41,7 +41,7 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 		return FindResult{}, err
 	}
 
-	asset, pattern, err := find(assets, ps)
+	asset, pattern, err := findAssetAndPattern(assets, ps)
 	if err != nil {
 		return FindResult{}, err
 	}
