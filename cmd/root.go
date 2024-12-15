@@ -50,7 +50,7 @@ func NewCommand() *cobra.Command {
 		SilenceUsage:  true,
 	}
 
-	command.Flags().StringVarP(&repoFullName, "repo", "R", defaultRepoFullName, "GitHub repository name. This should be OWNER/REPO format.")
+	command.Flags().StringVarP(&repoFullName, "repo", "R", defaultRepoFullName, "GitHub repository name. This should be [HOST/]OWNER/REPO format.")
 	command.Flags().StringVar(&tag, "tag", "", "GitHub release tag.")
 	command.Flags().StringToStringVar(&patterns, "pattern", github.DefaultPatterns, "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
 	command.Flags().StringVarP(&dir, "dir", "D", ".", "Directory where executable binary will be installed into.")

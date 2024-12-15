@@ -1,12 +1,8 @@
 package github
 
 import (
-	"fmt"
-	"regexp"
+	"github.com/cli/go-gh/v2/pkg/repository"
 )
-
-// repositoryFullNameFormat represents a GitHub repository full name format.
-var repositoryFullNameFormat = regexp.MustCompile("(?P<owner>.*)/(?P<name>.*)")
 
 // Repository represents a GitHub repository.
 type Repository struct {
@@ -23,14 +19,10 @@ func newRepository(owner string, name string) Repository {
 }
 
 // newRepositoryFromFullName returns a new [Repository] object from repository full name.
-// Repository full name should be 'OWNER/REPO' format.
 func newRepositoryFromFullName(fullName string) (Repository, error) {
-	format := repositoryFullNameFormat
-	if !format.MatchString(fullName) {
-		return Repository{}, fmt.Errorf("%w: %s", ErrInvalidRepositoryFullName, fullName)
+	repo, err := repository.Parse(fullName)
+	if err != nil {
+		return Repository{}, err
 	}
-	submatch := format.FindStringSubmatch(fullName)
-	owner := submatch[format.SubexpIndex("owner")]
-	name := submatch[format.SubexpIndex("name")]
-	return newRepository(owner, name), nil
+	return newRepository(repo.Owner, repo.Name), nil
 }
