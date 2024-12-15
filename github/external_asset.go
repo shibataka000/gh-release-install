@@ -2,6 +2,7 @@ package github
 
 import (
 	"bytes"
+	"context"
 	"io"
 	"maps"
 	"net/http"
@@ -70,7 +71,7 @@ func NewExternalAssetRepository(templates map[Repository][]ExternalAssetTemplate
 }
 
 // list GitHub release assets in given GitHub release and returns them.
-func (r *ExternalAssetRepository) list(repo Repository, release Release) ([]Asset, error) {
+func (r *ExternalAssetRepository) list(_ context.Context, repo Repository, release Release) ([]Asset, error) {
 	templates, ok := r.templates[repo]
 	if !ok {
 		return []Asset{}, nil
@@ -89,7 +90,7 @@ func (r *ExternalAssetRepository) list(repo Repository, release Release) ([]Asse
 }
 
 // download a GitHub release asset content and returns it. Progress bar is written into w.
-func (r *ExternalAssetRepository) download(asset Asset, w io.Writer) (AssetContent, error) {
+func (r *ExternalAssetRepository) download(_ context.Context, _ Repository, asset Asset, w io.Writer) (AssetContent, error) {
 	resp, err := http.Get(asset.DownloadURL.String())
 	if err != nil {
 		return nil, err

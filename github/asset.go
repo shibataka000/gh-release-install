@@ -96,6 +96,12 @@ func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, 
 	}
 }
 
+// IAssetRepository is an interface about repository for [Asset] and [AssetContent].
+type IAssetRepository interface {
+	list(ctx context.Context, repo Repository, release Release) ([]Asset, error)
+	download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error)
+}
+
 // AssetRepository is a repository for [Asset] and [AssetContent].
 type AssetRepository struct {
 	client *github.Client

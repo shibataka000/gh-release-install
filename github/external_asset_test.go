@@ -1,6 +1,7 @@
 package github
 
 import (
+	"context"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -113,8 +114,9 @@ func TestExternalAssetRepositoryList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require := require.New(t)
+			ctx := context.Background()
 			repository := NewExternalAssetRepository(DefaultExternalAssetTemplates)
-			assets, err := repository.list(tt.repo, tt.release)
+			assets, err := repository.list(ctx, tt.repo, tt.release)
 			require.NoError(err)
 			require.Equal(tt.assets, assets)
 		})

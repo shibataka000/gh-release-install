@@ -7,13 +7,13 @@ import (
 
 // ApplicationService.
 type ApplicationService struct {
-	asset         *AssetRepository
-	externalAsset *ExternalAssetRepository
-	execBinary    *ExecBinaryRepository
+	asset         IAssetRepository
+	externalAsset IAssetRepository
+	execBinary    IExecBinaryRepository
 }
 
 // NewApplicationService returns a new [ApplicationService] object.
-func NewApplicationService(asset *AssetRepository, externalAsset *ExternalAssetRepository, execBinary *ExecBinaryRepository) *ApplicationService {
+func NewApplicationService(asset IAssetRepository, externalAsset IAssetRepository, execBinary IExecBinaryRepository) *ApplicationService {
 	return &ApplicationService{
 		asset:         asset,
 		externalAsset: externalAsset,
@@ -78,7 +78,7 @@ func (app *ApplicationService) listAssets(ctx context.Context, repo Repository, 
 		return nil, err
 	}
 
-	externalAssets, err := app.externalAsset.list(repo, release)
+	externalAssets, err := app.externalAsset.list(ctx, repo, release)
 	if err != nil {
 		return nil, err
 	}
@@ -89,7 +89,7 @@ func (app *ApplicationService) listAssets(ctx context.Context, repo Repository, 
 // download a GitHub release asset content and returns it. Progress bar is written into w.
 func (app *ApplicationService) download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error) {
 	if asset.isExternal() {
-		return app.externalAsset.download(asset, w)
+		return app.externalAsset.download(ctx, repo, asset, w)
 	}
 	return app.asset.download(ctx, repo, asset, w)
 }
