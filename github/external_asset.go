@@ -19,11 +19,6 @@ func newExternalAssetFromString(downloadURL string) (Asset, error) {
 	return newAssetFromString(externalAssetID, downloadURL)
 }
 
-// isExternal returns false if asset is hosted on GitHub and returns true if asset is hosted on server other than GitHub.
-func (a Asset) isExternal() bool {
-	return a.id == externalAssetID
-}
-
 // ExternalAssetTemplate is a template of [Asset] hosted on server other than GitHub.
 type ExternalAssetTemplate struct {
 	downloadURL *template.Template
