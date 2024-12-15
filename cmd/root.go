@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Songmu/prompter"
+	"github.com/cli/go-gh/v2/pkg/prompter"
 	"github.com/shibataka000/gh-release-install/github"
 	"github.com/spf13/cobra"
 )
@@ -29,14 +29,21 @@ func NewCommand() *cobra.Command {
 		RunE: func(_ *cobra.Command, _ []string) error {
 			ctx := context.Background()
 			app := newApplicationService(token)
+
 			result, err := app.Find(ctx, repoFullName, tag, patterns)
 			if err != nil {
 				return err
 			}
-			message := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
-			if !prompter.YN(message, true) {
+
+			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
+			confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, false)
+			if err != nil {
+				return err
+			}
+			if !confirm {
 				return nil
 			}
+
 			return app.Install(ctx, result, dir, os.Stdout)
 		},
 		SilenceErrors: true,
