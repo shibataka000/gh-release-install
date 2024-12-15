@@ -77,7 +77,6 @@ func markFlagRequired(command *cobra.Command, name string, defaultValue string) 
 func newApplicationService(token string) *github.ApplicationService {
 	return github.NewApplicationService(
 		github.NewAssetRepository(token),
-		github.NewExternalAssetRepository(github.DefaultExternalAssetTemplates),
 		github.NewExecBinaryRepository(),
 	)
 }

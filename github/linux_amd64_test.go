@@ -275,7 +275,6 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 
 			app := NewApplicationService(
 				NewAssetRepository(githubTokenForTest),
-				NewExternalAssetRepository(DefaultExternalAssetTemplates),
 				NewExecBinaryRepository(),
 			)
 

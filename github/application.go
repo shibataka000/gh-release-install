@@ -7,17 +7,15 @@ import (
 
 // ApplicationService.
 type ApplicationService struct {
-	asset         IAssetRepository
-	externalAsset IAssetRepository
-	execBinary    IExecBinaryRepository
+	asset      IAssetRepository
+	execBinary IExecBinaryRepository
 }
 
 // NewApplicationService returns a new [ApplicationService] object.
-func NewApplicationService(asset IAssetRepository, externalAsset IAssetRepository, execBinary IExecBinaryRepository) *ApplicationService {
+func NewApplicationService(asset IAssetRepository, execBinary IExecBinaryRepository) *ApplicationService {
 	return &ApplicationService{
-		asset:         asset,
-		externalAsset: externalAsset,
-		execBinary:    execBinary,
+		asset:      asset,
+		execBinary: execBinary,
 	}
 }
 
@@ -37,7 +35,7 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 		return FindResult{}, err
 	}
 
-	assets, err := app.listAssets(ctx, repo, release)
+	assets, err := app.asset.list(ctx, repo, release)
 	if err != nil {
 		return FindResult{}, err
 	}
@@ -58,7 +56,7 @@ func (app *ApplicationService) Find(ctx context.Context, repoFullName string, ta
 // Install downloads a GitHub release asset, extracts an executable binary from it, and writes it into given directory.
 // Progress bar is written into w when downloading a GitHub release asset.
 func (app *ApplicationService) Install(ctx context.Context, result FindResult, dir string, w io.Writer) error {
-	assetContent, err := app.download(ctx, result.repo, result.Asset, w)
+	assetContent, err := app.asset.download(ctx, result.repo, result.Asset, w)
 	if err != nil {
 		return err
 	}
@@ -69,29 +67,6 @@ func (app *ApplicationService) Install(ctx context.Context, result FindResult, d
 	}
 
 	return app.execBinary.write(result.ExecBinary, execBinaryContent, dir)
-}
-
-// listAssets lists GitHub release assets in given GitHub release and returns them.
-func (app *ApplicationService) listAssets(ctx context.Context, repo Repository, release Release) ([]Asset, error) {
-	assets, err := app.asset.list(ctx, repo, release)
-	if err != nil {
-		return nil, err
-	}
-
-	externalAssets, err := app.externalAsset.list(ctx, repo, release)
-	if err != nil {
-		return nil, err
-	}
-
-	return append(assets, externalAssets...), nil
-}
-
-// download a GitHub release asset content and returns it. Progress bar is written into w.
-func (app *ApplicationService) download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error) {
-	if asset.isExternal() {
-		return app.externalAsset.download(ctx, repo, asset, w)
-	}
-	return app.asset.download(ctx, repo, asset, w)
 }
 
 // FindResult represents the result of [ApplicationService.Find].
