@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"io"
-	"maps"
 	"net/http"
+	"slices"
 	"text/template"
 
 	"github.com/cheggaaa/pb/v3"
@@ -55,44 +55,43 @@ func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 
 // AssetRepository is a repository for [Asset] and [AssetContent] hosted on server other than GitHub.
 type ExternalAssetRepository struct {
-	templates map[Repository][]ExternalAssetTemplate
+	templates []ExternalAssetTemplate
+
+	// stdout written progress bar into when downloading a GitHub release asset.
+	stdout io.Writer
 }
 
-// NewExternalAssetRepository returns a new [ExternalAssetRepository] object.
-func NewExternalAssetRepository(templates map[Repository][]ExternalAssetTemplate) *ExternalAssetRepository {
+// newExternalAssetRepository returns a new [ExternalAssetRepository] object.
+func newExternalAssetRepository(templates []ExternalAssetTemplate, stdout io.Writer) *ExternalAssetRepository {
 	return &ExternalAssetRepository{
-		templates: maps.Clone(templates),
+		templates: slices.Clone(templates),
+		stdout:    stdout,
 	}
 }
 
-// list GitHub release assets in given GitHub release and returns them.
-func (r *ExternalAssetRepository) list(_ context.Context, repo Repository, release Release) ([]Asset, error) {
-	templates, ok := r.templates[repo]
-	if !ok {
-		return []Asset{}, nil
-	}
-
+// list GitHub release assets in a given GitHub release and returns them.
+func (r *ExternalAssetRepository) list(_ context.Context, release Release) ([]Asset, error) {
 	assets := []Asset{}
-	for _, tmpl := range templates {
+	for _, tmpl := range r.templates {
 		asset, err := tmpl.execute(release)
 		if err != nil {
 			return nil, err
 		}
 		assets = append(assets, asset)
 	}
-
 	return assets, nil
 }
 
-// download a GitHub release asset content and returns it. Progress bar is written into w.
-func (r *ExternalAssetRepository) download(_ context.Context, _ Repository, asset Asset, w io.Writer) (AssetContent, error) {
+// download a GitHub release asset content and returns it.
+func (r *ExternalAssetRepository) download(_ context.Context, asset Asset) (AssetContent, error) {
 	resp, err := http.Get(asset.DownloadURL.String())
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	pr := pb.Full.Start64(resp.ContentLength).SetWriter(w).NewProxyReader(resp.Body)
+	pr := pb.Full.Start64(resp.ContentLength).SetWriter(r.stdout).NewProxyReader(resp.Body)
+	defer pr.Close()
 
 	return io.ReadAll(pr)
 }
