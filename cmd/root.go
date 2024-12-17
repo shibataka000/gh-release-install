@@ -37,7 +37,7 @@ func NewCommand() *cobra.Command {
 			}
 
 			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
-			confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, false)
+			confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
 			if !confirm || err != nil {
 				return err
 			}
