@@ -1,13 +1,9 @@
 package github
 
 import (
-	"os"
 	"os/exec"
 	"testing"
 )
-
-// githubTokenForTest is authentication token for GitHub API requests. This can be used for test only.
-var githubTokenForTest = os.Getenv("GH_TOKEN")
 
 // cloneCommand clones [exec.Cmd] and return it.
 func cloneCommand(t *testing.T, cmd *exec.Cmd) *exec.Cmd {

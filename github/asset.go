@@ -96,29 +96,53 @@ func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, 
 	}
 }
 
+// IAssetRepository is an interface about repository for [Asset] and [AssetContent].
+type IAssetRepository interface {
+	list(ctx context.Context, release Release) ([]Asset, error)
+	download(ctx context.Context, asset Asset) (AssetContent, error)
+}
+
+// NewAssetRepository returns a new [AssetRepository] object or [ExternalAssetRepository] object based on given repository name.
+func NewAssetRepository(repo string, stdout io.Writer) (IAssetRepository, error) {
+	r, err := parseRepository(repo)
+	if err != nil {
+		return nil, err
+	}
+	if templates, ok := defaultExternalAssetTemplates[r]; ok {
+		return newExternalAssetRepository(templates, stdout), nil
+	}
+	return newAssetRepository(r, stdout), nil
+}
+
 // AssetRepository is a repository for [Asset] and [AssetContent].
 type AssetRepository struct {
 	client *github.Client
+	repo   Repository
+
+	// stdout written progress bar into when downloading a GitHub release asset.
+	stdout io.Writer
 }
 
-// NewAssetRepository returns a new [AssetRepository] object.
-func NewAssetRepository(token string) *AssetRepository {
+// newAssetRepository returns a new [AssetRepository] object.
+func newAssetRepository(repo Repository, stdout io.Writer) *AssetRepository {
 	return &AssetRepository{
-		client: github.NewClient(http.DefaultClient).WithAuthToken(token),
+		client: newGitHubClient(repo.host),
+		repo:   repo,
+		stdout: stdout,
 	}
 }
 
-// list GitHub release assets in given GitHub release and returns them.
-func (r *AssetRepository) list(ctx context.Context, repo Repository, release Release) ([]Asset, error) {
+// list GitHub release assets in a given GitHub release and returns them.
+func (r *AssetRepository) list(ctx context.Context, release Release) ([]Asset, error) {
 	assets := []Asset{}
 
-	githubRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, repo.owner, repo.name, release.tag)
+	githubRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.owner, r.repo.name, release.tag)
 	if err != nil {
 		return nil, err
 	}
 
 	for page := 1; page != 0; {
-		githubAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, repo.owner, repo.name, githubRelease.GetID(), &github.ListOptions{
+		githubAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, r.repo.owner, r.repo.name, githubRelease.GetID(), &github.ListOptions{
 			Page: page,
 		})
 		if err != nil {
@@ -137,21 +161,21 @@ func (r *AssetRepository) list(ctx context.Context, repo Repository, release Rel
 	return assets, nil
 }
 
-// download a GitHub release asset content and returns it. Progress bar is written into w.
-func (r *AssetRepository) download(ctx context.Context, repo Repository, asset Asset, w io.Writer) (AssetContent, error) {
-	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, repo.owner, repo.name, asset.id)
+// download a GitHub release asset content and returns it.
+func (r *AssetRepository) download(ctx context.Context, asset Asset) (AssetContent, error) {
+	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.id)
 	if err != nil {
 		return nil, err
 	}
 
-	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, repo.owner, repo.name, asset.id, http.DefaultClient)
+	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.id, http.DefaultClient)
 	if err != nil {
 		return nil, err
 	}
 	defer rc.Close()
 
 	total := int64(githubAsset.GetSize())
-	pr := pb.Full.Start64(total).SetWriter(w).NewProxyReader(rc)
+	pr := pb.Full.Start64(total).SetWriter(r.stdout).NewProxyReader(rc)
 	defer pr.Close()
 
 	return io.ReadAll(pr)

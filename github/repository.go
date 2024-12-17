@@ -1,36 +1,39 @@
 package github
 
 import (
-	"fmt"
-	"regexp"
+	"github.com/cli/go-gh/v2/pkg/repository"
 )
 
-// repositoryFullNameFormat represents a GitHub repository full name format.
-var repositoryFullNameFormat = regexp.MustCompile("(?P<owner>.*)/(?P<name>.*)")
+// defaultHost represents a default GitHub host.
+var defaultHost = "github.com"
 
 // Repository represents a GitHub repository.
 type Repository struct {
+	host  string
 	owner string
 	name  string
 }
 
-// newRepository returns a new [Repository] object.
-func newRepository(owner string, name string) Repository {
+// newRepositoryWithHost returns a new [Repository] object.
+func newRepositoryWithHost(host string, owner string, name string) Repository {
 	return Repository{
+		host:  host,
 		owner: owner,
 		name:  name,
 	}
 }
 
-// newRepositoryFromFullName returns a new [Repository] object from repository full name.
-// Repository full name should be 'OWNER/REPO' format.
-func newRepositoryFromFullName(fullName string) (Repository, error) {
-	format := repositoryFullNameFormat
-	if !format.MatchString(fullName) {
-		return Repository{}, fmt.Errorf("%w: %s", ErrInvalidRepositoryFullName, fullName)
+// newRepository returns a new [Repository] object whose host is 'github.com' .
+func newRepository(owner string, name string) Repository {
+	return newRepositoryWithHost(defaultHost, owner, name)
+}
+
+// parseRepository extracts the repository information from the following string formats: "OWNER/REPO", "HOST/OWNER/REPO", and a full URL.
+// If the format does not specify a host, use the config to determine a host.
+func parseRepository(s string) (Repository, error) {
+	repo, err := repository.Parse(s)
+	if err != nil {
+		return Repository{}, err
 	}
-	submatch := format.FindStringSubmatch(fullName)
-	owner := submatch[format.SubexpIndex("owner")]
-	name := submatch[format.SubexpIndex("name")]
-	return newRepository(owner, name), nil
+	return newRepositoryWithHost(repo.Host, repo.Owner, repo.Name), nil
 }

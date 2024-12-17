@@ -2,6 +2,7 @@ package github
 
 import (
 	"context"
+	"io"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -60,8 +61,8 @@ func TestAssetRepositoryList(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			require := require.New(t)
 			ctx := context.Background()
-			repository := NewAssetRepository(githubTokenForTest)
-			assets, err := repository.list(ctx, tt.repo, tt.release)
+			repository := newAssetRepository(tt.repo, io.Discard)
+			assets, err := repository.list(ctx, tt.release)
 			require.NoError(err)
 			require.Equal(tt.assets, assets)
 		})

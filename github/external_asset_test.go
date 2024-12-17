@@ -1,36 +1,12 @@
 package github
 
 import (
+	"context"
+	"io"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
-
-func TestAssetIsExternal(t *testing.T) {
-	tests := []struct {
-		name       string
-		asset      Asset
-		isExternal bool
-	}{
-		{
-			name:       "Asset",
-			asset:      must(newAssetFromString(175682889, "https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz")),
-			isExternal: false,
-		},
-		{
-			name:       "ExternalAsset",
-			asset:      must(newExternalAssetFromString("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_linux_amd64.zip")),
-			isExternal: true,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			require := require.New(t)
-			require.Equal(tt.isExternal, tt.asset.isExternal())
-		})
-	}
-}
 
 func TestExternalAssetTemplateExecute(t *testing.T) {
 	tests := []struct {
@@ -113,8 +89,11 @@ func TestExternalAssetRepositoryList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require := require.New(t)
-			repository := NewExternalAssetRepository(DefaultExternalAssetTemplates)
-			assets, err := repository.list(tt.repo, tt.release)
+			ctx := context.Background()
+			templates, ok := defaultExternalAssetTemplates[tt.repo]
+			require.True(ok)
+			repository := newExternalAssetRepository(templates, io.Discard)
+			assets, err := repository.list(ctx, tt.release)
 			require.NoError(err)
 			require.Equal(tt.assets, assets)
 		})
