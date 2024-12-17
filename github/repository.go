@@ -14,6 +14,11 @@ type Repository struct {
 	name  string
 }
 
+// newRepository returns a new [Repository] object whose host is 'github.com' .
+func newRepository(owner string, name string) Repository {
+	return newRepositoryWithHost(defaultHost, owner, name)
+}
+
 // newRepositoryWithHost returns a new [Repository] object.
 func newRepositoryWithHost(host string, owner string, name string) Repository {
 	return Repository{
@@ -21,11 +26,6 @@ func newRepositoryWithHost(host string, owner string, name string) Repository {
 		owner: owner,
 		name:  name,
 	}
-}
-
-// newRepository returns a new [Repository] object whose host is 'github.com' .
-func newRepository(owner string, name string) Repository {
-	return newRepositoryWithHost(defaultHost, owner, name)
 }
 
 // parseRepository extracts the repository information from the following string formats: "OWNER/REPO", "HOST/OWNER/REPO", and a full URL.
