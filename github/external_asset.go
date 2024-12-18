@@ -5,6 +5,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"net/url"
 	"slices"
 	"text/template"
 
@@ -14,9 +15,18 @@ import (
 // externalAssetID is fake ID of [Asset] hosted on server other than GitHub.
 const externalAssetID = 0
 
+// newExternalAsset return a new [Asset] object hosted on server other than GitHub.
+func newExternalAsset(downloadURL *url.URL) Asset {
+	return newAsset(externalAssetID, downloadURL)
+}
+
 // parseExternalAsset return a new [Asset] object hosted on server other than GitHub.
 func parseExternalAsset(downloadURL string) (Asset, error) {
-	return parseAsset(externalAssetID, downloadURL)
+	url, err := url.Parse(downloadURL)
+	if err != nil {
+		return Asset{}, err
+	}
+	return newExternalAsset(url), nil
 }
 
 // ExternalAssetTemplate is a template of [Asset] hosted on server other than GitHub.
