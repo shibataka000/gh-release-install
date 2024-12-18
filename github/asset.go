@@ -30,8 +30,8 @@ func newAsset(id int64, downloadURL *url.URL) Asset {
 	}
 }
 
-// newAssetFromString returns a new [Asset] object.
-func newAssetFromString(id int64, downloadURL string) (Asset, error) {
+// parseAsset returns a new [Asset] object.
+func parseAsset(id int64, downloadURL string) (Asset, error) {
 	parsed, err := url.Parse(downloadURL)
 	if err != nil {
 		return Asset{}, err
@@ -149,7 +149,7 @@ func (r *AssetRepository) list(ctx context.Context, release Release) ([]Asset, e
 			return nil, err
 		}
 		for _, githubAsset := range githubAssets {
-			asset, err := newAssetFromString(githubAsset.GetID(), githubAsset.GetBrowserDownloadURL())
+			asset, err := parseAsset(githubAsset.GetID(), githubAsset.GetBrowserDownloadURL())
 			if err != nil {
 				return nil, err
 			}

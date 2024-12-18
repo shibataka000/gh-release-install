@@ -28,8 +28,8 @@ func newPattern(asset *regexp.Regexp, execBinary *template.Template) Pattern {
 	}
 }
 
-// newPatternFromString returns a new [Pattern] object.
-func newPatternFromString(asset string, execBinary string) (Pattern, error) {
+// parsePattern returns a new [Pattern] object.
+func parsePattern(asset string, execBinary string) (Pattern, error) {
 	a, err := regexp.Compile(asset)
 	if err != nil {
 		return Pattern{}, err
@@ -43,12 +43,12 @@ func newPatternFromString(asset string, execBinary string) (Pattern, error) {
 	return newPattern(a, b), nil
 }
 
-// newPatternArrayFromStringMap returns a new array of [Pattern] objects.
+// parsePatternMap returns a new array of [Pattern] objects.
 // Map's keys should be regular expressions of GitHub release asset download URL and values should be templates of executable binary name.
-func newPatternArrayFromStringMap(patterns map[string]string) ([]Pattern, error) {
+func parsePatternMap(patterns map[string]string) ([]Pattern, error) {
 	ps := []Pattern{}
 	for asset, execBinary := range patterns {
-		p, err := newPatternFromString(asset, execBinary)
+		p, err := parsePattern(asset, execBinary)
 		if err != nil {
 			return nil, err
 		}
