@@ -14,9 +14,9 @@ import (
 // externalAssetID is fake ID of [Asset] hosted on server other than GitHub.
 const externalAssetID = 0
 
-// newExternalAssetFromString return a new [Asset] object hosted on server other than GitHub.
-func newExternalAssetFromString(downloadURL string) (Asset, error) {
-	return newAssetFromString(externalAssetID, downloadURL)
+// parseExternalAsset return a new [Asset] object hosted on server other than GitHub.
+func parseExternalAsset(downloadURL string) (Asset, error) {
+	return parseAsset(externalAssetID, downloadURL)
 }
 
 // ExternalAssetTemplate is a template of [Asset] hosted on server other than GitHub.
@@ -31,8 +31,8 @@ func newExternalAssetTemplate(downloadURL *template.Template) ExternalAssetTempl
 	}
 }
 
-// newExternalAssetTemplateFromString returns a new [ExternalAssetTemplate] object.
-func newExternalAssetTemplateFromString(downloadURL string) (ExternalAssetTemplate, error) {
+// parseExternalAssetTemplate returns a new [ExternalAssetTemplate] object.
+func parseExternalAssetTemplate(downloadURL string) (ExternalAssetTemplate, error) {
 	tmpl, err := template.New("DownloadURL").Parse(downloadURL)
 	if err != nil {
 		return ExternalAssetTemplate{}, err
@@ -50,7 +50,7 @@ func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	if err := a.downloadURL.Execute(&buf, data); err != nil {
 		return Asset{}, err
 	}
-	return newExternalAssetFromString(buf.String())
+	return parseExternalAsset(buf.String())
 }
 
 // AssetRepository is a repository for [Asset] and [AssetContent] hosted on server other than GitHub.

@@ -22,7 +22,7 @@ func NewApplicationService(asset IAssetRepository, execBinary IExecBinaryReposit
 func (app *ApplicationService) Find(ctx context.Context, tag string, patterns map[string]string) (FindResult, error) {
 	release := newRelease(tag)
 
-	ps, err := newPatternArrayFromStringMap(patterns)
+	ps, err := parsePatternMap(patterns)
 	if err != nil {
 		return FindResult{}, err
 	}
