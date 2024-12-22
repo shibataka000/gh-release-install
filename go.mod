@@ -1,6 +1,6 @@
 module github.com/shibataka000/gh-release-install
 
-go 1.23
+go 1.23.0
 
 require (
 	github.com/cheggaaa/pb/v3 v3.1.5
