@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/cheggaaa/pb/v3 v3.1.5
-	github.com/cli/go-gh/v2 v2.11.1
+	github.com/cli/go-gh/v2 v2.11.2
 	github.com/gabriel-vasile/mimetype v1.4.8
 	github.com/google/go-github/v67 v67.0.0
 	github.com/spf13/cobra v1.8.1
