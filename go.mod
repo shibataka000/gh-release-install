@@ -200,11 +200,9 @@ require (
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
-	golang.org/x/telemetry v0.0.0-20240522233618-39ace7a40ae7 // indirect
 	golang.org/x/term v0.29.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	golang.org/x/tools v0.30.0 // indirect
-	golang.org/x/vuln v1.1.4 // indirect
 	google.golang.org/protobuf v1.36.4 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
@@ -214,8 +212,4 @@ require (
 	mvdan.cc/unparam v0.0.0-20240528143540-8a5130ca722f // indirect
 )
 
-tool (
-	github.com/golangci/golangci-lint/cmd/golangci-lint
-	golang.org/x/tools/cmd/goimports
-	golang.org/x/vuln/cmd/govulncheck
-)
+tool github.com/golangci/golangci-lint/cmd/golangci-lint
