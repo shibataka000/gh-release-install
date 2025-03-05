@@ -1,9 +1,5 @@
-.PHONY: fmt lint test build install clean vulncheck
+.PHONY: lint test build install clean
 .DEFAULT_GOAL := build
-
-fmt:
-	go fmt ./...
-	go tool goimports -w $(shell find . -type f -name "*.go")
 
 lint:
 	go tool golangci-lint run
@@ -19,6 +15,3 @@ install:
 
 clean:
 	go clean -testcache
-
-vulncheck:
-	go tool govulncheck ./...
