@@ -172,11 +172,11 @@ func (r *AssetRepository) download(ctx context.Context, asset Asset) (AssetConte
 	if err != nil {
 		return nil, err
 	}
-	defer rc.Close()
+	defer rc.Close() // nolint:errcheck
 
 	total := int64(githubAsset.GetSize())
 	pr := pb.Full.Start64(total).SetWriter(r.stdout).NewProxyReader(rc)
-	defer pr.Close()
+	defer pr.Close() // nolint:errcheck
 
 	return io.ReadAll(pr)
 }

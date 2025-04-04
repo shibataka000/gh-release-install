@@ -223,7 +223,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 
 			dir, err := os.MkdirTemp("", "")
 			require.NoError(err)
-			defer os.RemoveAll(dir)
+			defer os.RemoveAll(dir) // nolint:errcheck
 			tt.test.Dir = dir
 
 			before := cloneCommand(t, tt.test)

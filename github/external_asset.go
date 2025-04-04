@@ -63,7 +63,7 @@ func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	return parseExternalAsset(buf.String())
 }
 
-// AssetRepository is a repository for [Asset] and [AssetContent] hosted on server other than GitHub.
+// ExternalAssetRepository is a repository for [Asset] and [AssetContent] hosted on server other than GitHub.
 type ExternalAssetRepository struct {
 	templates []ExternalAssetTemplate
 
@@ -98,10 +98,10 @@ func (r *ExternalAssetRepository) download(_ context.Context, asset Asset) (Asse
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer resp.Body.Close() // nolint:errcheck
 
 	pr := pb.Full.Start64(resp.ContentLength).SetWriter(r.stdout).NewProxyReader(resp.Body)
-	defer pr.Close()
+	defer pr.Close() // nolint:errcheck
 
 	return io.ReadAll(pr)
 }

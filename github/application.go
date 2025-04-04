@@ -1,10 +1,11 @@
+// Package github provides a service to find and install GitHub release assets.
 package github
 
 import (
 	"context"
 )
 
-// ApplicationService.
+// ApplicationService provides a service to find and install GitHub release assets.
 type ApplicationService struct {
 	asset      IAssetRepository
 	execBinary IExecBinaryRepository
