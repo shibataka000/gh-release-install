@@ -1,3 +1,7 @@
 package github2
 
-// ...github/exec_binary_test.go の内容...
+import "testing"
+
+func TestExecBinaryRepositoryWrite(_ *testing.T) {
+	// todo: implement this.
+}
