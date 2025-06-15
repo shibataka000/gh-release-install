@@ -1,0 +1,3 @@
+package github2
+
+// ...github/repository.go の内容...

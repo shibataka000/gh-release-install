@@ -1,0 +1,3 @@
+package github2
+
+// ...github/release_test.go の内容...

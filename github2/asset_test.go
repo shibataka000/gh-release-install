@@ -1,0 +1,3 @@
+package github2
+
+// ...github/asset_test.go の内容...

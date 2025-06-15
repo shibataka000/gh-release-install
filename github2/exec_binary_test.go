@@ -1,0 +1,3 @@
+package github2
+
+// ...github/exec_binary_test.go の内容...
