@@ -1,9 +1,20 @@
 // Package github provides a service to find and install GitHub release assets.
-package github
+package ghreleaseinstall
 
 import (
 	"context"
 )
+
+// IAssetRepository is an interface about repository for [Asset] and [AssetContent].
+type IAssetRepository interface {
+	list(ctx context.Context, release Release) ([]Asset, error)
+	download(ctx context.Context, asset Asset) (AssetContent, error)
+}
+
+// IExecBinaryRepository is an interface about repository for [ExecBinary] and [ExecBinaryContent].
+type IExecBinaryRepository interface {
+	write(meta ExecBinary, content ExecBinaryContent, dir string) error
+}
 
 // ApplicationService provides a service to find and install GitHub release assets.
 type ApplicationService struct {
