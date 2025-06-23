@@ -1,4 +1,4 @@
-package gh_release_install
+package application_test
 
 import (
 	"testing"

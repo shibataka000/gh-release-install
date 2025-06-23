@@ -65,10 +65,10 @@ func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, 
 		r, err := xz.NewReader(br)
 		return r, nil, err
 	case "application/x-tar":
-		r, err := newFileReaderInTar(br, execBinary.Name)
+		r, err := newTarReader(br, execBinary.Name)
 		return r, nil, err
 	case "application/zip":
-		r, err := newFileReaderInZip(br, br.Size(), execBinary.Name)
+		r, err := newZipReader(br, br.Size(), execBinary.Name)
 		return r, r, err
 	default:
 		return nil, nil, fmt.Errorf("%w: %s", ErrUnexpectedMIMEType, mime.String())

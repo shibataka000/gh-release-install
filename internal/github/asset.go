@@ -1,149 +1,52 @@
 package github
 
 import (
-	"bytes"
-	"compress/gzip"
 	"context"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
-	"slices"
 
 	"github.com/cheggaaa/pb/v3"
-	"github.com/gabriel-vasile/mimetype"
-	"github.com/google/go-github/v67/github"
-	"github.com/ulikunitz/xz"
+	"github.com/cli/go-gh/v2/pkg/auth"
+	gogithub "github.com/google/go-github/v67/github"
+	"github.com/shibataka000/gh-release-install/github"
 )
-
-// Asset represents a GitHub release asset.
-type Asset struct {
-	id          int64
-	DownloadURL *url.URL
-}
-
-// newAsset returns a new [Asset] object.
-func newAsset(id int64, downloadURL *url.URL) Asset {
-	return Asset{
-		id:          id,
-		DownloadURL: downloadURL,
-	}
-}
-
-// parseAsset returns a new [Asset] object.
-func parseAsset(id int64, downloadURL string) (Asset, error) {
-	parsed, err := url.Parse(downloadURL)
-	if err != nil {
-		return Asset{}, err
-	}
-	return newAsset(id, parsed), nil
-}
-
-// AssetContent represents a GitHub release asset content.
-type AssetContent []byte
-
-// extract [ExecBinaryContent] from [AssetContent] and returns it.
-func (a AssetContent) extract(execBinary ExecBinary) (ExecBinaryContent, error) {
-	b := []byte(a)
-
-	for !isExecBinaryContent(b) {
-		r, c, err := newReaderToExtract(b, execBinary)
-		if err != nil {
-			return nil, err
-		}
-		b, err = io.ReadAll(r)
-		if err != nil {
-			return nil, err
-		}
-		if c != nil {
-			if err := c.Close(); err != nil {
-				return nil, err
-			}
-		}
-	}
-
-	return ExecBinaryContent(b), nil
-}
-
-// isExecBinaryContent returns true if MIME type of given bytes means executable binary content.
-func isExecBinaryContent(b []byte) bool {
-	expect := []string{"application/octet-stream", "application/x-executable", "application/x-sharedlib"}
-	mime := mimetype.Detect(b)
-	return slices.Contains(expect, mime.String())
-}
-
-// newReaderToExtract returns [io.Reader] to unarchive/decompress given bytes.
-// Closing [io.ReadCloser] is caller's responsibility if it is not nil.
-func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, error) {
-	br := bytes.NewReader(b)
-	mime := mimetype.Detect(b)
-
-	switch mime.String() {
-	case "application/gzip":
-		r, err := gzip.NewReader(br)
-		return r, nil, err
-	case "application/x-xz":
-		r, err := xz.NewReader(br)
-		return r, nil, err
-	case "application/x-tar":
-		r, err := newFileReaderInTar(br, execBinary.Name)
-		return r, nil, err
-	case "application/zip":
-		r, err := newFileReaderInZip(br, br.Size(), execBinary.Name)
-		return r, r, err
-	default:
-		return nil, nil, fmt.Errorf("%w: %s", ErrUnexpectedMIMEType, mime.String())
-	}
-}
-
-// NewAssetRepository returns a new [AssetRepository] object or [ExternalAssetRepository] object based on given repository name.
-func NewAssetRepository(repo string, stdout io.Writer) (IAssetRepository, error) {
-	r, err := ParseRepository(repo)
-	if err != nil {
-		return nil, err
-	}
-	if templates, ok := defaultExternalAssetTemplates[r]; ok {
-		return newExternalAssetRepository(templates, stdout), nil
-	}
-	return newAssetRepository(r, stdout), nil
-}
 
 // AssetRepository is a repository for [Asset] and [AssetContent].
 type AssetRepository struct {
-	client *github.Client
-	repo   Repository
-
-	// stdout written progress bar into when downloading a GitHub release asset.
-	stdout io.Writer
+	client      *gogithub.Client
+	repo        github.Repository
+	progressBar io.Writer // This is written progress bar into when downloading a GitHub release asset.
 }
 
-// newAssetRepository returns a new [AssetRepository] object.
-func newAssetRepository(repo Repository, stdout io.Writer) *AssetRepository {
+// NewAssetRepository returns a new [AssetRepository] object.
+func NewAssetRepository(repo github.Repository, progressBar io.Writer) *AssetRepository {
+	token, _ := auth.TokenForHost(repo.Host)
 	return &AssetRepository{
-		client: newGitHubClient(repo.Host),
-		repo:   repo,
-		stdout: stdout,
+		client:      gogithub.NewClient(http.DefaultClient).WithAuthToken(token),
+		repo:        repo,
+		progressBar: progressBar,
 	}
 }
 
 // list GitHub release assets in a given GitHub release and returns them.
-func (r *AssetRepository) list(ctx context.Context, release Release) ([]Asset, error) {
-	assets := []Asset{}
+func (r *AssetRepository) List(ctx context.Context, release github.Release) ([]github.Asset, error) {
+	assets := []github.Asset{}
 
-	githubRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.Owner, r.repo.Name, release.Tag)
+	repositoryRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.Owner, r.repo.Name, release.Tag)
 	if err != nil {
 		return nil, err
 	}
 
 	for page := 1; page != 0; {
-		githubAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, r.repo.Owner, r.repo.Name, githubRelease.GetID(), &github.ListOptions{
+		releaseAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, r.repo.Owner, r.repo.Name, repositoryRelease.GetID(), &gogithub.ListOptions{
 			Page: page,
 		})
 		if err != nil {
 			return nil, err
 		}
-		for _, githubAsset := range githubAssets {
-			asset, err := parseAsset(githubAsset.GetID(), githubAsset.GetBrowserDownloadURL())
+		for _, releaseAsset := range releaseAssets {
+			asset, err := parse(releaseAsset.GetID(), releaseAsset.GetBrowserDownloadURL())
 			if err != nil {
 				return nil, err
 			}
@@ -155,22 +58,34 @@ func (r *AssetRepository) list(ctx context.Context, release Release) ([]Asset, e
 	return assets, nil
 }
 
-// download a GitHub release asset content and returns it.
-func (r *AssetRepository) download(ctx context.Context, asset Asset) (AssetContent, error) {
-	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.Owner, r.repo.Name, asset.id)
+// Download a GitHub release asset content and returns it.
+func (r *AssetRepository) Download(ctx context.Context, asset github.Asset) (github.AssetContent, error) {
+	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.Owner, r.repo.Name, asset.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, r.repo.Owner, r.repo.Name, asset.id, http.DefaultClient)
+	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, r.repo.Owner, r.repo.Name, asset.ID, http.DefaultClient)
 	if err != nil {
 		return nil, err
 	}
 	defer rc.Close() // nolint:errcheck
 
 	total := int64(githubAsset.GetSize())
-	pr := pb.Full.Start64(total).SetWriter(r.stdout).NewProxyReader(rc)
+	pr := pb.Full.Start64(total).SetWriter(r.progressBar).NewProxyReader(rc)
 	defer pr.Close() // nolint:errcheck
 
 	return io.ReadAll(pr)
+}
+
+// parse returns a new [Asset] object.
+func parse(id int64, downloadURL string) (github.Asset, error) {
+	parsed, err := url.Parse(downloadURL)
+	if err != nil {
+		return github.Asset{}, err
+	}
+	return github.Asset{
+		ID:          id,
+		DownloadURL: parsed,
+	}, nil
 }
