@@ -9,31 +9,22 @@ var defaultHost = "github.com"
 
 // Repository represents a GitHub repository.
 type Repository struct {
-	host  string
-	owner string
-	name  string
+	Host  string
+	Owner string
+	Name  string
 }
 
-// newRepository returns a new [Repository] object whose host is 'github.com' .
-func newRepository(owner string, name string) Repository {
-	return newRepositoryWithHost(defaultHost, owner, name)
-}
-
-// newRepositoryWithHost returns a new [Repository] object.
-func newRepositoryWithHost(host string, owner string, name string) Repository {
-	return Repository{
-		host:  host,
-		owner: owner,
-		name:  name,
-	}
-}
-
-// parseRepository extracts the repository information from the following string formats: "OWNER/REPO", "HOST/OWNER/REPO", and a full URL.
+// ParseRepository extracts the repository information from the following string formats: "OWNER/REPO", "HOST/OWNER/REPO", and a full URL.
 // If the format does not specify a host, use the config to determine a host.
-func parseRepository(s string) (Repository, error) {
+func ParseRepository(s string) (Repository, error) {
 	repo, err := repository.Parse(s)
 	if err != nil {
 		return Repository{}, err
 	}
-	return newRepositoryWithHost(repo.Host, repo.Owner, repo.Name), nil
+	// return newRepositoryWithHost(repo.Host, repo.Owner, repo.Name), nil
+	return Repository{
+		Host:  repo.Host,
+		Owner: repo.Owner,
+		Name:  repo.Name,
+	}, nil
 }

@@ -15,14 +15,14 @@ func TestParseRepository(t *testing.T) {
 		{
 			name: "hashicorp/terraform",
 			s:    "hashicorp/terraform",
-			repo: newRepository("hashicorp", "terraform"),
+			repo: Repository{Host: "github.com", Owner: "hashicorp", Name: "terraform"},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require := require.New(t)
-			repo, err := parseRepository(tt.s)
+			repo, err := ParseRepository(tt.s)
 			require.NoError(err)
 			require.Equal(tt.repo, repo)
 		})

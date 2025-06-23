@@ -1,5 +1,5 @@
 // Package github provides a service to find and install GitHub release assets.
-package ghreleaseinstall
+package gh_release_install
 
 import (
 	"context"

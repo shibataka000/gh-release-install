@@ -14,17 +14,17 @@ func TestReleaseSemVer(t *testing.T) {
 	}{
 		{
 			name:    "v1.0.0",
-			release: newRelease("v1.0.0"),
+			release: Release{"v1.0.0"},
 			semver:  "1.0.0",
 		},
 		{
 			name:    "1.0.0",
-			release: newRelease("1.0.0"),
+			release: Release{"1.0.0"},
 			semver:  "1.0.0",
 		},
 		{
 			name:    "x.y.z",
-			release: newRelease("x.y.z"),
+			release: Release{"x.y.z"},
 			semver:  "",
 		},
 	}
@@ -32,7 +32,7 @@ func TestReleaseSemVer(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			require := require.New(t)
-			require.Equal(tt.semver, tt.release.semVer())
+			require.Equal(tt.semver, tt.release.SemVer())
 		})
 	}
 }
