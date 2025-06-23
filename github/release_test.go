@@ -1,30 +1,31 @@
-package github
+package github_test
 
 import (
 	"testing"
 
+	"github.com/shibataka000/gh-release-install/github"
 	"github.com/stretchr/testify/require"
 )
 
 func TestReleaseSemVer(t *testing.T) {
 	tests := []struct {
 		name    string
-		release Release
+		release github.Release
 		semver  string
 	}{
 		{
 			name:    "v1.0.0",
-			release: Release{"v1.0.0"},
+			release: github.Release{"v1.0.0"},
 			semver:  "1.0.0",
 		},
 		{
 			name:    "1.0.0",
-			release: Release{"1.0.0"},
+			release: github.Release{"1.0.0"},
 			semver:  "1.0.0",
 		},
 		{
 			name:    "x.y.z",
-			release: Release{"x.y.z"},
+			release: github.Release{"x.y.z"},
 			semver:  "",
 		},
 	}

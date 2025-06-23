@@ -4,9 +4,6 @@ import (
 	"github.com/cli/go-gh/v2/pkg/repository"
 )
 
-// defaultHost represents a default GitHub host.
-var defaultHost = "github.com"
-
 // Repository represents a GitHub repository.
 type Repository struct {
 	Host  string
@@ -21,7 +18,6 @@ func ParseRepository(s string) (Repository, error) {
 	if err != nil {
 		return Repository{}, err
 	}
-	// return newRepositoryWithHost(repo.Host, repo.Owner, repo.Name), nil
 	return Repository{
 		Host:  repo.Host,
 		Owner: repo.Owner,
