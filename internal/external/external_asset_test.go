@@ -5,46 +5,16 @@ import (
 	"io"
 	"testing"
 
+	"github.com/shibataka000/gh-release-install/github"
 	"github.com/stretchr/testify/require"
 )
-
-func TestExternalAssetTemplateExecute(t *testing.T) {
-	tests := []struct {
-		name     string
-		template AssetTemplate
-		release  Release
-		asset    Asset
-	}{
-		{
-			name:     "https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip",
-			template: must(parseExternalAssetTemplate("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_linux_amd64.zip")),
-			release:  newRelease("v1.9.0"),
-			asset:    must(parseAsset(0, "https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip")),
-		},
-		{
-			name:     "https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz",
-			template: must(parseExternalAssetTemplate("https://get.helm.sh/helm-{{.Tag}}-linux-amd64.tar.gz")),
-			release:  newRelease("v3.16.2"),
-			asset:    must(parseAsset(0, "https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz")),
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			require := require.New(t)
-			asset, err := tt.template.execute(tt.release)
-			require.NoError(err)
-			require.Equal(tt.asset, asset)
-		})
-	}
-}
 
 func TestExternalAssetRepositoryList(t *testing.T) {
 	tests := []struct {
 		name    string
-		repo    Repository
-		release Release
-		assets  []Asset
+		repo    github.Repository
+		release github.Release
+		assets  []github.Asset
 	}{
 		{
 			name:    "hashicorp/terraform",

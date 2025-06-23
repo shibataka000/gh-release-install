@@ -45,9 +45,9 @@ type AssetRepository struct {
 }
 
 // NewAssetRepository returns a new [AssetRepository] object.
-func NewAssetRepository(stdout io.Writer) *AssetRepository {
+func NewAssetRepository(repo github.Repository, stdout io.Writer) *AssetRepository {
 	return &AssetRepository{
-		templates:   slices.Clone(defaultExternalAssetTemplates),
+		templates:   slices.Clone(defaultExternalAssetTemplates[repo]),
 		progressBar: stdout,
 	}
 }
