@@ -14,19 +14,25 @@ func TestReleaseSemVer(t *testing.T) {
 		semver  string
 	}{
 		{
-			name:    "v1.0.0",
-			release: github.Release{"v1.0.0"},
-			semver:  "1.0.0",
+			name: "v1.0.0",
+			release: github.Release{
+				Tag: "v1.0.0",
+			},
+			semver: "1.0.0",
 		},
 		{
-			name:    "1.0.0",
-			release: github.Release{"1.0.0"},
-			semver:  "1.0.0",
+			name: "1.0.0",
+			release: github.Release{
+				Tag: "1.0.0",
+			},
+			semver: "1.0.0",
 		},
 		{
-			name:    "x.y.z",
-			release: github.Release{"x.y.z"},
-			semver:  "",
+			name: "x.y.z",
+			release: github.Release{
+				Tag: "x.y.z",
+			},
+			semver: "",
 		},
 	}
 

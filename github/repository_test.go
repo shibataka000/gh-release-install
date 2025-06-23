@@ -16,7 +16,11 @@ func TestParseRepository(t *testing.T) {
 		{
 			name: "hashicorp/terraform",
 			s:    "hashicorp/terraform",
-			repo: github.Repository{Host: "github.com", Owner: "hashicorp", Name: "terraform"},
+			repo: github.Repository{
+				Host:  "github.com",
+				Owner: "hashicorp",
+				Name:  "terraform",
+			},
 		},
 	}
 
