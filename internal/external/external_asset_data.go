@@ -1,8 +1,10 @@
-package github
+package external
+
+import "github.com/shibataka000/gh-release-install/github"
 
 // defaultExternalAssetTemplates are templates of known release asset hosted on server other than GitHub.
-var defaultExternalAssetTemplates = map[Repository][]ExternalAssetTemplate{
-	newRepository("gravitational", "teleport"): {
+var defaultExternalAssetTemplates = map[github.Repository][]AssetTemplate{
+	github.Repository{Host: "github.com", Owner: "gravitational", Name: "teleport"}: {
 		// Linux
 		must(parseExternalAssetTemplate("https://cdn.teleport.dev/teleport-{{.SemVer}}-1.arm64.rpm")),
 		must(parseExternalAssetTemplate("https://cdn.teleport.dev/teleport-{{.SemVer}}-1.arm.rpm")),

@@ -1,4 +1,4 @@
-package github
+package external_test
 
 import (
 	"context"
@@ -11,7 +11,7 @@ import (
 func TestExternalAssetTemplateExecute(t *testing.T) {
 	tests := []struct {
 		name     string
-		template ExternalAssetTemplate
+		template AssetTemplate
 		release  Release
 		asset    Asset
 	}{
@@ -92,7 +92,7 @@ func TestExternalAssetRepositoryList(t *testing.T) {
 			ctx := context.Background()
 			templates, ok := defaultExternalAssetTemplates[tt.repo]
 			require.True(ok)
-			repository := newExternalAssetRepository(templates, io.Discard)
+			repository := NewAssetRepository(templates, io.Discard)
 			assets, err := repository.list(ctx, tt.release)
 			require.NoError(err)
 			require.Equal(tt.assets, assets)
