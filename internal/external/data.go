@@ -12,7 +12,7 @@ func newAssetTemplate(text string) AssetTemplate {
 
 // defaultExternalAssetTemplates are templates of known release asset hosted on server other than GitHub.
 var defaultExternalAssetTemplates = map[github.Repository][]AssetTemplate{
-	github.Repository{Host: "github.com", Owner: "gravitational", Name: "teleport"}: {
+	{Host: "github.com", Owner: "gravitational", Name: "teleport"}: {
 		// Linux
 		newAssetTemplate("https://cdn.teleport.dev/teleport-{{.SemVer}}-1.arm64.rpm"),
 		newAssetTemplate("https://cdn.teleport.dev/teleport-{{.SemVer}}-1.arm.rpm"),
@@ -60,7 +60,7 @@ var defaultExternalAssetTemplates = map[github.Repository][]AssetTemplate{
 		// Windows
 		newAssetTemplate("https://cdn.teleport.dev/Teleport%20Connect%20Setup-{{.SemVer}}.exe"),
 	},
-	github.Repository{Host: "github.com", Owner: "hashicorp", Name: "terraform"}: {
+	{Host: "github.com", Owner: "hashicorp", Name: "terraform"}: {
 		newAssetTemplate("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_darwin_amd64.zip"),
 		newAssetTemplate("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_darwin_arm64.zip"),
 		newAssetTemplate("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_freebsd_386.zip"),
@@ -76,7 +76,7 @@ var defaultExternalAssetTemplates = map[github.Repository][]AssetTemplate{
 		newAssetTemplate("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_windows_386.zip"),
 		newAssetTemplate("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_windows_amd64.zip"),
 	},
-	github.Repository{Host: "github.com", Owner: "helm", Name: "helm"}: {
+	{Host: "github.com", Owner: "helm", Name: "helm"}: {
 		newAssetTemplate("https://get.helm.sh/helm-{{.Tag}}-darwin-amd64.tar.gz"),
 		newAssetTemplate("https://get.helm.sh/helm-{{.Tag}}-darwin-arm64.tar.gz"),
 		newAssetTemplate("https://get.helm.sh/helm-{{.Tag}}-linux-386.tar.gz"),
@@ -88,7 +88,7 @@ var defaultExternalAssetTemplates = map[github.Repository][]AssetTemplate{
 		newAssetTemplate("https://get.helm.sh/helm-{{.Tag}}-linux-s390x.tar.gz"),
 		newAssetTemplate("https://get.helm.sh/helm-{{.Tag}}-windows-amd64.zip"),
 	},
-	github.Repository{Host: "github.com", Owner: "kubernetes", Name: "kubernetes"}: {
+	{Host: "github.com", Owner: "kubernetes", Name: "kubernetes"}: {
 		newAssetTemplate("https://dl.k8s.io/release/{{.Tag}}/bin/darwin/amd64/kubectl"),
 		newAssetTemplate("https://dl.k8s.io/release/{{.Tag}}/bin/darwin/arm64/kubectl"),
 		newAssetTemplate("https://dl.k8s.io/release/{{.Tag}}/bin/linux/amd64/kubectl"),
