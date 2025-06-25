@@ -1,14 +1,8 @@
 package external
 
 import (
-	"text/template"
-
 	"github.com/shibataka000/gh-release-install/github"
 )
-
-func newAssetTemplate(text string) AssetTemplate {
-	return AssetTemplate{downloadURL: template.Must(template.New("").Parse(text))}
-}
 
 // defaultExternalAssetTemplates are templates of known release asset hosted on server other than GitHub.
 var defaultExternalAssetTemplates = map[github.Repository][]AssetTemplate{

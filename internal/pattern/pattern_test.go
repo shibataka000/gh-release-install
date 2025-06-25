@@ -1,16 +1,18 @@
-package github
+package pattern_test
 
 import (
 	"testing"
 
+	"github.com/shibataka000/gh-release-install/github"
+	"github.com/shibataka000/gh-release-install/internal/pattern"
 	"github.com/stretchr/testify/require"
 )
 
 func TestPatternMatch(t *testing.T) {
 	tests := []struct {
 		name    string
-		pattern Pattern
-		asset   Asset
+		pattern pattern.Pattern
+		asset   github.Asset
 		match   bool
 	}{
 		{
@@ -38,7 +40,7 @@ func TestPatternMatch(t *testing.T) {
 func TestPatternPriority(t *testing.T) {
 	tests := []struct {
 		name     string
-		pattern  Pattern
+		pattern  pattern.Pattern
 		priority int
 	}{
 		{
@@ -70,9 +72,9 @@ func TestPatternPriority(t *testing.T) {
 func TestPatternExecute(t *testing.T) {
 	tests := []struct {
 		name       string
-		pattern    Pattern
-		asset      Asset
-		execBinary ExecBinary
+		pattern    pattern.Pattern
+		asset      github.Asset
+		execBinary github.ExecBinary
 	}{
 		{
 			name:       "CapturingGroup",
@@ -101,10 +103,10 @@ func TestPatternExecute(t *testing.T) {
 func TestFindAssetAndPattern(t *testing.T) {
 	tests := []struct {
 		name     string
-		assets   []Asset
-		patterns []Pattern
-		asset    Asset
-		pattern  Pattern
+		assets   []github.Asset
+		patterns []pattern.Pattern
+		asset    github.Asset
+		pattern  pattern.Pattern
 	}{
 		{
 			name: "FindMatchingAssetAndPattern",

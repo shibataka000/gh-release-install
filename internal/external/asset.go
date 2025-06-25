@@ -38,6 +38,10 @@ func (a AssetTemplate) execute(release github.Release) (github.Asset, error) {
 	}, nil
 }
 
+func newAssetTemplate(text string) AssetTemplate {
+	return AssetTemplate{downloadURL: template.Must(template.New("").Parse(text))}
+}
+
 // AssetRepository is a repository for [Asset] and [AssetContent] hosted on server other than GitHub.
 type AssetRepository struct {
 	templates   []AssetTemplate

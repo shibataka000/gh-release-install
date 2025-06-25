@@ -1,4 +1,4 @@
-package github
+package pattern
 
 import (
 	"bytes"
@@ -6,6 +6,8 @@ import (
 	"slices"
 	"strconv"
 	"text/template"
+
+	"github.com/shibataka000/gh-release-install/github"
 )
 
 // Pattern represents a pair of regular expression of GitHub release asset download URL and template of executable binary name.
@@ -58,7 +60,7 @@ func parsePatternMap(patterns map[string]string) ([]Pattern, error) {
 }
 
 // match returns true if regular expression in pattern matches given GitHub release asset download URL.
-func (p Pattern) match(asset Asset) bool {
+func (p Pattern) match(asset github.Asset) bool {
 	return p.asset.Match([]byte(asset.DownloadURL.String()))
 }
 
@@ -70,7 +72,7 @@ func (p Pattern) priority() int {
 }
 
 // execute applies a template of executable binary name to values of capturing groups in regular expression of GitHub release asset download URL and returns [ExecBinary] object.
-func (p Pattern) execute(asset Asset) (ExecBinary, error) {
+func (p Pattern) execute(asset github.Asset) (github.ExecBinary, error) {
 	data := map[string]string{}
 	submatch := p.asset.FindStringSubmatch(asset.DownloadURL.String())
 
@@ -87,15 +89,15 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 
 	var b bytes.Buffer
 	if err := p.execBinary.Execute(&b, data); err != nil {
-		return ExecBinary{}, err
+		return github.ExecBinary{}, err
 	}
 
-	return newExecBinary(b.String()), nil
+	return github.ExecBinary{Name: b.String()}, nil
 }
 
 // findAssetAndPattern find [Asset] and [Pattern] matching and returns them.
 // Pattern with higher priority is prioritized over pattern with lower priority.
-func findAssetAndPattern(assets []Asset, patterns []Pattern) (Asset, Pattern, error) {
+func findAssetAndPattern(assets []github.Asset, patterns []Pattern) (github.Asset, Pattern, error) {
 	cloned := slices.Clone(patterns)
 	slices.SortFunc(cloned, func(p1, p2 Pattern) int {
 		return p2.priority() - p1.priority()
@@ -109,5 +111,5 @@ func findAssetAndPattern(assets []Asset, patterns []Pattern) (Asset, Pattern, er
 		}
 	}
 
-	return Asset{}, Pattern{}, ErrNoAssetsMatchPattern
+	return github.Asset{}, Pattern{}, ErrNoAssetsMatchPattern
 }
