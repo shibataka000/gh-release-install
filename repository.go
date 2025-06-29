@@ -6,9 +6,9 @@ import (
 
 // Repository represents a GitHub repository.
 type Repository struct {
-	Host  string
-	Owner string
-	Name  string
+	host  string
+	owner string
+	name  string
 }
 
 // parseRepository extracts the repository information from the following string formats: "OWNER/REPO", "HOST/OWNER/REPO", and a full URL.
@@ -19,8 +19,8 @@ func parseRepository(s string) (Repository, error) {
 		return Repository{}, err
 	}
 	return Repository{
-		Host:  repo.Host,
-		Owner: repo.Owner,
-		Name:  repo.Name,
+		host:  repo.Host,
+		owner: repo.Owner,
+		name:  repo.Name,
 	}, nil
 }

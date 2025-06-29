@@ -11,15 +11,6 @@ import (
 	"github.com/google/go-github/v67/github"
 )
 
-// parseAsset returns a new [Asset] object.
-func parseAsset(id int64, downloadURL string) (Asset, error) {
-	parsed, err := url.Parse(downloadURL)
-	if err != nil {
-		return Asset{}, err
-	}
-	return newAsset(id, parsed), nil
-}
-
 // GitHubAssetRepository is a repository for [Asset] and [AssetContent].
 type GitHubAssetRepository struct {
 	client      *github.Client
@@ -29,7 +20,7 @@ type GitHubAssetRepository struct {
 
 // newGitHubAssetRepository returns a new [GitHubAssetRepository] object.
 func newGitHubAssetRepository(repo Repository, progressBar io.Writer) *GitHubAssetRepository {
-	token, _ := auth.TokenForHost(repo.Host)
+	token, _ := auth.TokenForHost(repo.host)
 	return &GitHubAssetRepository{
 		client:      github.NewClient(http.DefaultClient).WithAuthToken(token),
 		repo:        repo,
@@ -41,24 +32,27 @@ func newGitHubAssetRepository(repo Repository, progressBar io.Writer) *GitHubAss
 func (r *GitHubAssetRepository) list(ctx context.Context, release Release) ([]Asset, error) {
 	assets := []Asset{}
 
-	githubRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.owner, r.repo.name, release.Tag)
+	repositoryRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.owner, r.repo.name, release.tag)
 	if err != nil {
 		return nil, err
 	}
 
 	for page := 1; page != 0; {
-		githubAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, r.repo.owner, r.repo.name, githubRelease.GetID(), &github.ListOptions{
+		releaseAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, r.repo.owner, r.repo.name, repositoryRelease.GetID(), &github.ListOptions{
 			Page: page,
 		})
 		if err != nil {
 			return nil, err
 		}
-		for _, githubAsset := range githubAssets {
-			asset, err := parseAsset(githubAsset.GetID(), githubAsset.GetBrowserDownloadURL())
+		for _, releaseAsset := range releaseAssets {
+			downloadURL, err := url.Parse(releaseAsset.GetBrowserDownloadURL())
 			if err != nil {
 				return nil, err
 			}
-			assets = append(assets, asset)
+			assets = append(assets, Asset{
+				ID:          releaseAsset.GetID(),
+				DownloadURL: downloadURL,
+			})
 		}
 		page = resp.NextPage
 	}
@@ -68,7 +62,7 @@ func (r *GitHubAssetRepository) list(ctx context.Context, release Release) ([]As
 
 // download a GitHub release asset content and returns it.
 func (r *GitHubAssetRepository) download(ctx context.Context, asset Asset) (AssetContent, error) {
-	githubAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.ID)
+	releaseAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -79,7 +73,7 @@ func (r *GitHubAssetRepository) download(ctx context.Context, asset Asset) (Asse
 	}
 	defer rc.Close() // nolint:errcheck
 
-	total := int64(githubAsset.GetSize())
+	total := int64(releaseAsset.GetSize())
 	pr := pb.Full.Start64(total).SetWriter(r.progressBar).NewProxyReader(rc)
 	defer pr.Close() // nolint:errcheck
 
