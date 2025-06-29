@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 )
 
-// newFileReaderInTar returns a [io.Reader] to read file which is given name in tarball.
-func newFileReaderInTar(r io.Reader, name string) (io.Reader, error) {
+// newTarReader returns a [io.Reader] to read file which is given name in tarball.
+func newTarReader(r io.Reader, name string) (io.Reader, error) {
 	for tr := tar.NewReader(r); ; {
 		header, err := tr.Next()
 		if err != nil {
@@ -20,9 +20,9 @@ func newFileReaderInTar(r io.Reader, name string) (io.Reader, error) {
 	}
 }
 
-// newFileReaderInZip returns a [io.ReadCloser] to read file which is given name in zip file.
+// newZipReader returns a [io.ReadCloser] to read file which is given name in zip file.
 // Closing [io.ReadCloser] is caller's responsibility.
-func newFileReaderInZip(r io.ReaderAt, size int64, name string) (io.ReadCloser, error) {
+func newZipReader(r io.ReaderAt, size int64, name string) (io.ReadCloser, error) {
 	zr, err := zip.NewReader(r, size)
 	if err != nil {
 		return nil, err
