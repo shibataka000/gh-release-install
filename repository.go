@@ -1,4 +1,4 @@
-package github
+package main
 
 import (
 	"github.com/cli/go-gh/v2/pkg/repository"

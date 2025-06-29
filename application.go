@@ -1,5 +1,5 @@
-// Package github provides a service to find and install GitHub release assets.
-package github
+// package main provides a service to find and install GitHub release assets.
+package main
 
 import (
 	"context"

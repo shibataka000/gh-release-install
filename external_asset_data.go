@@ -1,4 +1,4 @@
-package github
+package main
 
 // defaultExternalAssetTemplates are templates of known release asset hosted on server other than GitHub.
 var defaultExternalAssetTemplates = map[Repository][]ExternalAssetTemplate{

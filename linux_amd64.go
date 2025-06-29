@@ -1,4 +1,4 @@
-package github
+package main
 
 var (
 	// DefaultPatterns are recommended patterns for linux/amd64.
