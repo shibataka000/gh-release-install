@@ -5,49 +5,15 @@ import (
 	"context"
 	"io"
 	"net/http"
-	"net/url"
 	"slices"
 	"text/template"
 
 	"github.com/cheggaaa/pb/v3"
 )
 
-// externalAssetID is fake ID of [Asset] hosted on server other than GitHub.
-const externalAssetID = 0
-
-// newExternalAsset return a new [Asset] object hosted on server other than GitHub.
-func newExternalAsset(downloadURL *url.URL) Asset {
-	return newAsset(externalAssetID, downloadURL)
-}
-
-// parseExternalAsset return a new [Asset] object hosted on server other than GitHub.
-func parseExternalAsset(downloadURL string) (Asset, error) {
-	url, err := url.Parse(downloadURL)
-	if err != nil {
-		return Asset{}, err
-	}
-	return newExternalAsset(url), nil
-}
-
 // ExternalAssetTemplate is a template of [Asset] hosted on server other than GitHub.
 type ExternalAssetTemplate struct {
 	downloadURL *template.Template
-}
-
-// newExternalAssetTemplate returns a new [ExternalAssetTemplate] object.
-func newExternalAssetTemplate(downloadURL *template.Template) ExternalAssetTemplate {
-	return ExternalAssetTemplate{
-		downloadURL: downloadURL,
-	}
-}
-
-// parseExternalAssetTemplate returns a new [ExternalAssetTemplate] object.
-func parseExternalAssetTemplate(downloadURL string) (ExternalAssetTemplate, error) {
-	tmpl, err := template.New("DownloadURL").Parse(downloadURL)
-	if err != nil {
-		return ExternalAssetTemplate{}, err
-	}
-	return newExternalAssetTemplate(tmpl), nil
 }
 
 // execute applies a [ExternalAssetTemplate] to [Release] object and returns [Asset] object.
@@ -65,17 +31,15 @@ func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 
 // ExternalAssetRepository is a repository for [Asset] and [AssetContent] hosted on server other than GitHub.
 type ExternalAssetRepository struct {
-	templates []ExternalAssetTemplate
-
-	// stdout written progress bar into when downloading a GitHub release asset.
-	stdout io.Writer
+	templates   []ExternalAssetTemplate
+	progressBar io.Writer // written progress bar into when downloading a GitHub release asset.
 }
 
 // newExternalAssetRepository returns a new [ExternalAssetRepository] object.
-func newExternalAssetRepository(templates []ExternalAssetTemplate, stdout io.Writer) *ExternalAssetRepository {
+func newExternalAssetRepository(templates []ExternalAssetTemplate, progressBar io.Writer) *ExternalAssetRepository {
 	return &ExternalAssetRepository{
-		templates: slices.Clone(templates),
-		stdout:    stdout,
+		templates:   slices.Clone(templates),
+		progressBar: progressBar,
 	}
 }
 
@@ -100,7 +64,7 @@ func (r *ExternalAssetRepository) download(_ context.Context, asset Asset) (Asse
 	}
 	defer resp.Body.Close() // nolint:errcheck
 
-	pr := pb.Full.Start64(resp.ContentLength).SetWriter(r.stdout).NewProxyReader(resp.Body)
+	pr := pb.Full.Start64(resp.ContentLength).SetWriter(r.progressBar).NewProxyReader(resp.Body)
 	defer pr.Close() // nolint:errcheck
 
 	return io.ReadAll(pr)
