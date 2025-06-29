@@ -29,8 +29,8 @@ func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	}
 	downloadURL, err := url.Parse(buf.String())
 	return Asset{
-		ID:          0, // fake ID of [Asset] hosted on server other than GitHub.
-		DownloadURL: downloadURL,
+		id:          0, // fake ID of [Asset] hosted on server other than GitHub.
+		downloadURL: downloadURL,
 	}, err
 }
 
@@ -63,7 +63,7 @@ func (r *ExternalAssetRepository) list(_ context.Context, release Release) ([]As
 
 // download a GitHub release asset content and returns it.
 func (r *ExternalAssetRepository) download(_ context.Context, asset Asset) (AssetContent, error) {
-	resp, err := http.Get(asset.DownloadURL.String())
+	resp, err := http.Get(asset.downloadURL.String())
 	if err != nil {
 		return nil, err
 	}

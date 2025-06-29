@@ -50,8 +50,8 @@ func (r *GitHubAssetRepository) list(ctx context.Context, release Release) ([]As
 				return nil, err
 			}
 			assets = append(assets, Asset{
-				ID:          releaseAsset.GetID(),
-				DownloadURL: downloadURL,
+				id:          releaseAsset.GetID(),
+				downloadURL: downloadURL,
 			})
 		}
 		page = resp.NextPage
@@ -62,12 +62,12 @@ func (r *GitHubAssetRepository) list(ctx context.Context, release Release) ([]As
 
 // download a GitHub release asset content and returns it.
 func (r *GitHubAssetRepository) download(ctx context.Context, asset Asset) (AssetContent, error) {
-	releaseAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.ID)
+	releaseAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.id)
 	if err != nil {
 		return nil, err
 	}
 
-	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.ID, http.DefaultClient)
+	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.id, http.DefaultClient)
 	if err != nil {
 		return nil, err
 	}

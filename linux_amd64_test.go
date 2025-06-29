@@ -231,7 +231,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 
 			assetRepository, err := NewAssetRepository(tt.repo, io.Discard)
 			require.NoError(err)
-			execBinary := NewExecBinaryRepository()
+			execBinary := newExecBinaryRepository()
 			app := NewApplicationService(assetRepository, execBinary)
 
 			ctx := context.Background()
