@@ -7,20 +7,20 @@ import (
 
 // ApplicationService provides a service to find and install GitHub release assets.
 type ApplicationService struct {
-	asset      IAssetRepository
+	asset      AssetRepository
 	execBinary *ExecBinaryRepository
 }
 
 // NewApplicationService returns a new [ApplicationService] object.
-func NewApplicationService(asset IAssetRepository, execBinary *ExecBinaryRepository) *ApplicationService {
+func NewApplicationService(asset AssetRepository, execBinary *ExecBinaryRepository) *ApplicationService {
 	return &ApplicationService{
 		asset:      asset,
 		execBinary: execBinary,
 	}
 }
 
-// IAssetRepository is an interface about repository for [Asset] and [AssetContent].
-type IAssetRepository interface {
+// AssetRepository is an interface about repository for [Asset] and [AssetContent].
+type AssetRepository interface {
 	list(ctx context.Context, release Release) ([]Asset, error)
 	download(ctx context.Context, asset Asset) (AssetContent, error)
 }
