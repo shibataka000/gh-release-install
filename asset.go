@@ -76,13 +76,13 @@ func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, 
 }
 
 // NewAssetRepository returns a new [GitHubAssetRepository] object or [ExternalAssetRepository] object based on given repository name.
-func NewAssetRepository(repo string, stdout io.Writer) (IAssetRepository, error) {
+func NewAssetRepository(repo string, progressBar io.Writer) (IAssetRepository, error) {
 	r, err := parseRepository(repo)
 	if err != nil {
 		return nil, err
 	}
 	if templates, ok := defaultExternalAssetTemplates[r]; ok {
-		return newExternalAssetRepository(templates, stdout), nil
+		return newExternalAssetRepository(templates, progressBar), nil
 	}
-	return newGitHubAssetRepository(r, stdout), nil
+	return newGitHubAssetRepository(r, progressBar), nil
 }
