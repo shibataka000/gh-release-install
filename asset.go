@@ -46,9 +46,9 @@ func (a AssetContent) extract(execBinary ExecBinary) (ExecBinaryContent, error) 
 
 // isExecBinaryContent returns true if MIME type of given bytes means executable binary content.
 func isExecBinaryContent(b []byte) bool {
-	expect := []string{"application/octet-stream", "application/x-executable", "application/x-sharedlib"}
+	binaryMIMEs := []string{"application/octet-stream", "application/x-executable", "application/x-sharedlib"}
 	mime := mimetype.Detect(b)
-	return slices.Contains(expect, mime.String())
+	return slices.Contains(binaryMIMEs, mime.String())
 }
 
 // newReaderToExtract returns [io.Reader] to unarchive/decompress given bytes.

@@ -5,6 +5,7 @@ import (
 	"context"
 	"io"
 	"net/http"
+	"net/url"
 	"slices"
 	"text/template"
 
@@ -26,7 +27,14 @@ func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	if err := a.downloadURL.Execute(&buf, data); err != nil {
 		return Asset{}, err
 	}
-	return parseExternalAsset(buf.String())
+	downloadURL, err := url.Parse(buf.String())
+	if err != nil {
+		return Asset{}, err
+	}
+	return Asset{
+		ID:          0, // fake ID of [Asset] hosted on server other than GitHub.
+		DownloadURL: downloadURL,
+	}, nil
 }
 
 // ExternalAssetRepository is a repository for [Asset] and [AssetContent] hosted on server other than GitHub.
