@@ -13,16 +13,27 @@ type ExecBinary struct {
 // ExecBinaryContent represents a executable binary content in a GitHub release asset content.
 type ExecBinaryContent []byte
 
-// ExecBinaryRepository is a repository for [ExecBinary] and [ExecBinaryContent].
-type ExecBinaryRepository2 struct{}
+// FSExecBinaryRepository is a repository for [ExecBinary] and [ExecBinaryContent].
+type FSExecBinaryRepository struct {
+	dir string
+}
 
 // newExecBinaryRepository returns a new [ExecBinaryRepository] object.
-func newExecBinaryRepository() ExecBinaryRepository {
-	return &ExecBinaryRepository2{}
+func newExecBinaryRepository(dir string) *FSExecBinaryRepository {
+	return &FSExecBinaryRepository{
+		dir: dir,
+	}
+}
+
+// newFSExecBinaryRepository returns a new [FSExecBinaryRepository] object.
+func newFSExecBinaryRepository(dir string) *FSExecBinaryRepository {
+	return &FSExecBinaryRepository{
+		dir: dir,
+	}
 }
 
 // write [ExecBinaryContent] into file in given directory.
-func (r *ExecBinaryRepository2) Write(meta ExecBinary, content ExecBinaryContent, dir string) error {
-	path := filepath.Join(dir, meta.name)
+func (r *FSExecBinaryRepository) Write(meta ExecBinary, content ExecBinaryContent) error {
+	path := filepath.Join(r.dir, meta.name)
 	return os.WriteFile(path, content, 0755)
 }

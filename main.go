@@ -36,7 +36,7 @@ func NewCommand() *cobra.Command {
 				return err
 			}
 
-			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.name, result.Asset.downloadURL.String())
+			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.name, result.Asset.DownloadURL.String())
 			confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
 			if !confirm || err != nil {
 				return err
@@ -62,7 +62,7 @@ func NewCommand() *cobra.Command {
 
 // newApplicationService returns a new [github.com/shibataka000/gh-release-install/github.ApplicationService] object.
 func newApplicationService(repo string) (*ApplicationService, error) {
-	asset, err := newAssetRepository(repo, os.Stdout)
+	asset, err := NewAssetRepository(repo, os.Stdout)
 	if err != nil {
 		return nil, err
 	}

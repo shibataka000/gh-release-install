@@ -230,7 +230,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			before := cloneCommand(t, tt.test)
 			require.Error(before.Run(), "executable binary was already installed")
 
-			assetRepository, err := newAssetRepository(tt.repo, io.Discard)
+			assetRepository, err := NewAssetRepository(tt.repo, io.Discard)
 			require.NoError(err)
 			execBinary := newExecBinaryRepository()
 			app := NewApplicationService(assetRepository, execBinary)

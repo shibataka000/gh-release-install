@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"regexp"
 	"slices"
 	"strconv"
@@ -43,7 +44,7 @@ func parsePatterns(patterns map[string]string) ([]Pattern, error) {
 
 // match returns true if regular expression in pattern matches given GitHub release asset download URL.
 func (p Pattern) match(asset Asset) bool {
-	return p.asset.Match([]byte(asset.downloadURL.String()))
+	return p.asset.Match([]byte(asset.DownloadURL.String()))
 }
 
 // priority returns a literal prefix length of regular expression of GitHub release asset download URL as priority of pattern.
@@ -56,7 +57,7 @@ func (p Pattern) priority() int {
 // execute applies a template of executable binary name to values of capturing groups in regular expression of GitHub release asset download URL and returns [ExecBinary] object.
 func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 	data := map[string]string{}
-	submatch := p.asset.FindStringSubmatch(asset.downloadURL.String())
+	submatch := p.asset.FindStringSubmatch(asset.DownloadURL.String())
 
 	for i := range submatch {
 		data[strconv.Itoa(i)] = submatch[i]
@@ -95,5 +96,5 @@ func findAssetAndPattern(assets []Asset, patterns []Pattern) (Asset, Pattern, er
 		}
 	}
 
-	return Asset{}, Pattern{}, ErrNoAssetsMatchPattern
+	return Asset{}, Pattern{}, errors.New("no assets match the pattern")
 }
