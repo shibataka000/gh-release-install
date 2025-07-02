@@ -7,7 +7,18 @@ import (
 // ApplicationService provides a service to find and install GitHub release assets.
 type ApplicationService struct {
 	asset      AssetRepository
-	execBinary *ExecBinaryRepository
+	execBinary ExecBinaryRepository
+}
+
+// AssetRepository is an interface about repository for [Asset] and [AssetContent].
+type AssetRepository interface {
+	List(ctx context.Context, release Release) ([]Asset, error)
+	Download(ctx context.Context, asset Asset) (AssetContent, error)
+}
+
+// ExecBinaryRepository is an interface about repository for [ExecBinary] and [ExecBinaryContent].
+type ExecBinaryRepository interface {
+	Write(meta ExecBinary, content ExecBinaryContent, dir string) error
 }
 
 // FindResult represents the result of [ApplicationService.Find].
@@ -16,14 +27,8 @@ type FindResult struct {
 	ExecBinary ExecBinary
 }
 
-// AssetRepository is an interface about repository for [Asset] and [AssetContent].
-type AssetRepository interface {
-	list(ctx context.Context, release Release) ([]Asset, error)
-	download(ctx context.Context, asset Asset) (AssetContent, error)
-}
-
 // NewApplicationService returns a new [ApplicationService] object.
-func NewApplicationService(asset AssetRepository, execBinary *ExecBinaryRepository) *ApplicationService {
+func NewApplicationService(asset AssetRepository, execBinary ExecBinaryRepository) *ApplicationService {
 	return &ApplicationService{
 		asset:      asset,
 		execBinary: execBinary,
@@ -32,16 +37,14 @@ func NewApplicationService(asset AssetRepository, execBinary *ExecBinaryReposito
 
 // Find a GitHub release asset in given release which matches given patterns and returns it and an executable binary in it.
 func (app *ApplicationService) Find(ctx context.Context, tag string, patterns map[string]string) (FindResult, error) {
-	release := Release{
-		Tag: tag,
-	}
-
 	ps, err := parsePatterns(patterns)
 	if err != nil {
 		return FindResult{}, err
 	}
 
-	assets, err := app.asset.list(ctx, release)
+	assets, err := app.asset.List(ctx, Release{
+		Tag: tag,
+	})
 	if err != nil {
 		return FindResult{}, err
 	}
@@ -64,7 +67,7 @@ func (app *ApplicationService) Find(ctx context.Context, tag string, patterns ma
 
 // Install downloads a GitHub release asset, extracts an executable binary from it, and writes it into given directory.
 func (app *ApplicationService) Install(ctx context.Context, result FindResult, dir string) error {
-	assetContent, err := app.asset.download(ctx, result.Asset)
+	assetContent, err := app.asset.Download(ctx, result.Asset)
 	if err != nil {
 		return err
 	}
@@ -74,5 +77,5 @@ func (app *ApplicationService) Install(ctx context.Context, result FindResult, d
 		return err
 	}
 
-	return app.execBinary.write(result.ExecBinary, execBinaryContent, dir)
+	return app.execBinary.Write(result.ExecBinary, execBinaryContent, dir)
 }
