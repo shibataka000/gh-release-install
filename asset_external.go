@@ -12,8 +12,8 @@ import (
 	"github.com/cheggaaa/pb/v3"
 )
 
-// externalAssetTemplates are templates of known release asset hosted on server other than GitHub.
-var externalAssetTemplates = map[Repository][]ExternalAssetTemplate{
+// defaultExternalAssetTemplates are templates of known release asset hosted on server other than GitHub.
+var defaultExternalAssetTemplates = map[Repository][]ExternalAssetTemplate{
 	Repository{
 		Host:  "github.com",
 		Owner: "gravitational",

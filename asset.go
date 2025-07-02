@@ -112,7 +112,7 @@ func NewAssetRepository(repo string, progressBar io.Writer) (AssetRepository, er
 	if err != nil {
 		return nil, err
 	}
-	if templates, ok := externalAssetTemplates[r]; ok {
+	if templates, ok := defaultExternalAssetTemplates[r]; ok {
 		return newExternalAssetRepository(templates, progressBar), nil
 	}
 	return newGitHubAssetRepository(r, progressBar), nil
