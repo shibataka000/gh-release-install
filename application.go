@@ -36,7 +36,7 @@ func (app *ApplicationService) Find(ctx context.Context, tag string, patterns ma
 		Tag: tag,
 	}
 
-	ps, err := parsePatternMap(patterns)
+	ps, err := parsePatterns(patterns)
 	if err != nil {
 		return FindResult{}, err
 	}

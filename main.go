@@ -8,7 +8,6 @@ import (
 	"os"
 
 	"github.com/cli/go-gh/v2/pkg/prompter"
-	"github.com/cli/go-gh/v2/pkg/repository"
 	"github.com/spf13/cobra"
 )
 
@@ -69,15 +68,6 @@ func newApplicationService(repo string) (*ApplicationService, error) {
 	}
 	execBinary := newExecBinaryRepository()
 	return NewApplicationService(asset, execBinary), nil
-}
-
-// currentRepository returns the GitHub repository the current directory is tracking, or empty string if not found.
-func currentRepository() string {
-	repo, err := repository.Current()
-	if err != nil {
-		return ""
-	}
-	return fmt.Sprintf("%s/%s/%s", repo.Host, repo.Owner, repo.Name)
 }
 
 func main() {

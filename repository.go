@@ -20,3 +20,12 @@ func parseRepository(s string) (Repository, error) {
 	}
 	return Repository(repo), nil
 }
+
+// currentRepository returns the GitHub repository the current directory is tracking
+func currentRepository() (Repository, error) {
+	repo, err := repository.Current()
+	if err != nil {
+		return Repository{}, err
+	}
+	return Repository(repo), nil
+}
