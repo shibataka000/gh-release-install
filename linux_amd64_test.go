@@ -23,7 +23,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v0.53.0",
 			result: FindResult{
 				Asset:      Asset{176981043, must(url.Parse("https://github.com/aquasecurity/trivy/releases/download/v0.53.0/trivy_0.53.0_Linux-64bit.tar.gz"))},
-				ExecBinary: ExecBinary{name: "trivy"},
+				ExecBinary: ExecBinary{Name: "trivy"},
 			},
 			test: exec.Command("./trivy", "version"),
 		},
@@ -32,7 +32,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v2.9.18",
 			result: FindResult{
 				Asset:      Asset{177293568, must(url.Parse("https://github.com/argoproj/argo-cd/releases/download/v2.9.18/argocd-linux-amd64"))},
-				ExecBinary: ExecBinary{name: "argocd"},
+				ExecBinary: ExecBinary{Name: "argocd"},
 			},
 			test: exec.Command("./argocd", "version", "--client"),
 		},
@@ -41,7 +41,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v1.7.1",
 			result: FindResult{
 				Asset:      Asset{175717897, must(url.Parse("https://github.com/argoproj/argo-rollouts/releases/download/v1.7.1/kubectl-argo-rollouts-linux-amd64"))},
-				ExecBinary: ExecBinary{name: "kubectl-argo-rollouts"},
+				ExecBinary: ExecBinary{Name: "kubectl-argo-rollouts"},
 			},
 			test: exec.Command("./kubectl-argo-rollouts", "version"),
 		},
@@ -50,7 +50,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v3.5.8",
 			result: FindResult{
 				Asset:      Asset{174415137, must(url.Parse("https://github.com/argoproj/argo-workflows/releases/download/v3.5.8/argo-linux-amd64.gz"))},
-				ExecBinary: ExecBinary{name: "argo"},
+				ExecBinary: ExecBinary{Name: "argo"},
 			},
 			test: exec.Command("./argo", "version"),
 		},
@@ -59,7 +59,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v0.34.2",
 			result: FindResult{
 				Asset:      Asset{172104571, must(url.Parse("https://github.com/buildpacks/pack/releases/download/v0.34.2/pack-v0.34.2-linux.tgz"))},
-				ExecBinary: ExecBinary{name: "pack"},
+				ExecBinary: ExecBinary{Name: "pack"},
 			},
 			test: exec.Command("./pack", "version"),
 		},
@@ -68,7 +68,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v2.52.0",
 			result: FindResult{
 				Asset:      Asset{175682889, must(url.Parse("https://github.com/cli/cli/releases/download/v2.52.0/gh_2.52.0_linux_amd64.tar.gz"))},
-				ExecBinary: ExecBinary{name: "gh"},
+				ExecBinary: ExecBinary{Name: "gh"},
 			},
 			test: exec.Command("./gh", "version"),
 		},
@@ -77,7 +77,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v3.9.0",
 			result: FindResult{
 				Asset:      Asset{176438234, must(url.Parse("https://github.com/getsops/sops/releases/download/v3.9.0/sops-v3.9.0.linux.amd64"))},
-				ExecBinary: ExecBinary{name: "sops"},
+				ExecBinary: ExecBinary{Name: "sops"},
 			},
 			test: exec.Command("./sops", "--version"),
 		},
@@ -86,7 +86,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v0.4.14",
 			result: FindResult{
 				Asset:      Asset{149683239, must(url.Parse("https://github.com/goodwithtech/dockle/releases/download/v0.4.14/dockle_0.4.14_Linux-64bit.tar.gz"))},
-				ExecBinary: ExecBinary{name: "dockle"},
+				ExecBinary: ExecBinary{Name: "dockle"},
 			},
 			test: exec.Command("./dockle", "--version"),
 		},
@@ -95,7 +95,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v16.4.6",
 			result: FindResult{
 				Asset:      Asset{0, must(url.Parse("https://cdn.teleport.dev/teleport-v16.4.6-linux-amd64-bin.tar.gz"))},
-				ExecBinary: ExecBinary{name: "tsh"},
+				ExecBinary: ExecBinary{Name: "tsh"},
 			},
 			test: exec.Command("./tsh", "version"),
 		},
@@ -104,7 +104,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v1.9.0",
 			result: FindResult{
 				Asset:      Asset{0, must(url.Parse("https://releases.hashicorp.com/terraform/1.9.0/terraform_1.9.0_linux_amd64.zip"))},
-				ExecBinary: ExecBinary{name: "terraform"},
+				ExecBinary: ExecBinary{Name: "terraform"},
 			},
 			test: exec.Command("./terraform", "version"),
 		},
@@ -113,7 +113,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v3.16.2",
 			result: FindResult{
 				Asset:      Asset{0, must(url.Parse("https://get.helm.sh/helm-v3.16.2-linux-amd64.tar.gz"))},
-				ExecBinary: ExecBinary{name: "helm"},
+				ExecBinary: ExecBinary{Name: "helm"},
 			},
 			test: exec.Command("./helm", "version"),
 		},
@@ -122,7 +122,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "1.22.2",
 			result: FindResult{
 				Asset:      Asset{176364493, must(url.Parse("https://github.com/istio/istio/releases/download/1.22.2/istioctl-1.22.2-linux-amd64.tar.gz"))},
-				ExecBinary: ExecBinary{name: "istioctl"},
+				ExecBinary: ExecBinary{Name: "istioctl"},
 			},
 			test: exec.Command("./istioctl", "version"),
 		},
@@ -131,7 +131,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v0.10.0",
 			result: FindResult{
 				Asset:      Asset{155543215, must(url.Parse("https://github.com/koalaman/shellcheck/releases/download/v0.10.0/shellcheck-v0.10.0.linux.x86_64.tar.xz"))},
-				ExecBinary: ExecBinary{name: "shellcheck"},
+				ExecBinary: ExecBinary{Name: "shellcheck"},
 			},
 			test: exec.Command("./shellcheck", "--version"),
 		},
@@ -140,7 +140,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v1.31.0",
 			result: FindResult{
 				Asset:      Asset{0, must(url.Parse("https://dl.k8s.io/release/v1.31.0/bin/linux/amd64/kubectl"))},
-				ExecBinary: ExecBinary{name: "kubectl"},
+				ExecBinary: ExecBinary{Name: "kubectl"},
 			},
 			test: exec.Command("./kubectl", "version", "--client"),
 		},
@@ -149,7 +149,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v4.44.2",
 			result: FindResult{
 				Asset:      Asset{174040565, must(url.Parse("https://github.com/mikefarah/yq/releases/download/v4.44.2/yq_linux_amd64"))},
-				ExecBinary: ExecBinary{name: "yq"},
+				ExecBinary: ExecBinary{Name: "yq"},
 			},
 			test: exec.Command("./yq", "version"),
 		},
@@ -158,7 +158,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v0.53.0",
 			result: FindResult{
 				Asset:      Asset{172540735, must(url.Parse("https://github.com/open-policy-agent/conftest/releases/download/v0.53.0/conftest_0.53.0_Linux_x86_64.tar.gz"))},
-				ExecBinary: ExecBinary{name: "conftest"},
+				ExecBinary: ExecBinary{Name: "conftest"},
 			},
 			test: exec.Command("./conftest", "--version"),
 		},
@@ -167,7 +167,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v3.16.3",
 			result: FindResult{
 				Asset:      Asset{169950399, must(url.Parse("https://github.com/open-policy-agent/gatekeeper/releases/download/v3.16.3/gator-v3.16.3-linux-amd64.tar.gz"))},
-				ExecBinary: ExecBinary{name: "gator"},
+				ExecBinary: ExecBinary{Name: "gator"},
 			},
 			test: exec.Command("./gator", "version"),
 		},
@@ -176,7 +176,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v0.66.0",
 			result: FindResult{
 				Asset:      Asset{176292835, must(url.Parse("https://github.com/open-policy-agent/opa/releases/download/v0.66.0/opa_linux_amd64"))},
-				ExecBinary: ExecBinary{name: "opa"},
+				ExecBinary: ExecBinary{Name: "opa"},
 			},
 			test: exec.Command("./opa", "version"),
 		},
@@ -185,7 +185,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v27.2",
 			result: FindResult{
 				Asset:      Asset{175919234, must(url.Parse("https://github.com/protocolbuffers/protobuf/releases/download/v27.2/protoc-27.2-linux-x86_64.zip"))},
-				ExecBinary: ExecBinary{name: "protoc"},
+				ExecBinary: ExecBinary{Name: "protoc"},
 			},
 			test: exec.Command("./protoc", "--version"),
 		},
@@ -194,7 +194,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v1.1292.1",
 			result: FindResult{
 				Asset:      Asset{176276540, must(url.Parse("https://github.com/snyk/cli/releases/download/v1.1292.1/snyk-linux"))},
-				ExecBinary: ExecBinary{name: "snyk"},
+				ExecBinary: ExecBinary{Name: "snyk"},
 			},
 			test: exec.Command("./snyk", "version"),
 		},
@@ -203,7 +203,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v1.19.0",
 			result: FindResult{
 				Asset:      Asset{168103285, must(url.Parse("https://github.com/starship/starship/releases/download/v1.19.0/starship-x86_64-unknown-linux-gnu.tar.gz"))},
-				ExecBinary: ExecBinary{name: "starship"},
+				ExecBinary: ExecBinary{Name: "starship"},
 			},
 			test: exec.Command("./starship", "--version"),
 		},
@@ -212,7 +212,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			tag:  "v4.3.2",
 			result: FindResult{
 				Asset:      Asset{176582858, must(url.Parse("https://github.com/viaduct-ai/kustomize-sops/releases/download/v4.3.2/ksops_4.3.2_Linux_x86_64.tar.gz"))},
-				ExecBinary: ExecBinary{name: "ksops"},
+				ExecBinary: ExecBinary{Name: "ksops"},
 			},
 			test: exec.Command("test", "-f", "./ksops"),
 		},
@@ -227,7 +227,7 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			defer os.RemoveAll(dir) // nolint:errcheck
 			tt.test.Dir = dir
 
-			before := cloneCommand(t, tt.test)
+			before := clone(t, tt.test)
 			require.Error(before.Run(), "executable binary was already installed")
 
 			assetRepository, err := NewAssetRepository(tt.repo, io.Discard)
@@ -241,13 +241,11 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			require.NoError(err)
 			require.Equal(tt.result, result)
 
-			if !testing.Short() {
-				err := app.Install(ctx, result, dir)
-				require.NoError(err)
+			err = app.Install(ctx, result, dir)
+			require.NoError(err)
 
-				after := cloneCommand(t, tt.test)
-				require.NoError(after.Run())
-			}
+			after := clone(t, tt.test)
+			require.NoError(after.Run())
 		})
 	}
 }

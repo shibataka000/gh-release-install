@@ -18,7 +18,7 @@ type AssetRepository interface {
 
 // ExecBinaryRepository is an interface about repository for [ExecBinary] and [ExecBinaryContent].
 type ExecBinaryRepository interface {
-	Write(meta ExecBinary, content ExecBinaryContent, dir string) error
+	Write(meta ExecBinary, content ExecBinaryContent) error
 }
 
 // FindResult represents the result of [ApplicationService.Find].
@@ -65,8 +65,8 @@ func (app *ApplicationService) Find(ctx context.Context, tag string, patterns ma
 	}, nil
 }
 
-// Install downloads a GitHub release asset, extracts an executable binary from it, and writes it into given directory.
-func (app *ApplicationService) Install(ctx context.Context, result FindResult, dir string) error {
+// Install downloads a GitHub release asset, extracts an executable binary from it, and writes it.
+func (app *ApplicationService) Install(ctx context.Context, result FindResult) error {
 	assetContent, err := app.asset.Download(ctx, result.Asset)
 	if err != nil {
 		return err
@@ -77,5 +77,5 @@ func (app *ApplicationService) Install(ctx context.Context, result FindResult, d
 		return err
 	}
 
-	return app.execBinary.Write(result.ExecBinary, execBinaryContent, dir)
+	return app.execBinary.Write(result.ExecBinary, execBinaryContent)
 }

@@ -36,7 +36,7 @@ func NewCommand() *cobra.Command {
 				return err
 			}
 
-			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.name, result.Asset.DownloadURL.String())
+			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
 			confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
 			if !confirm || err != nil {
 				return err

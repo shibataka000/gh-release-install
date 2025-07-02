@@ -76,7 +76,7 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 	}
 
 	return ExecBinary{
-		name: b.String(),
+		Name: b.String(),
 	}, nil
 }
 

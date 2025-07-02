@@ -7,22 +7,20 @@ import (
 
 // ExecBinary represents a executable binary in a GitHub release asset.
 type ExecBinary struct {
-	name string
+	Name string
 }
 
 // ExecBinaryContent represents a executable binary content in a GitHub release asset content.
 type ExecBinaryContent []byte
 
+// NewExecBinaryRepository returns a new [ExecBinaryRepository] object.
+func NewExecBinaryRepository(dir string) ExecBinaryRepository {
+	return newFSExecBinaryRepository(dir)
+}
+
 // FSExecBinaryRepository is a repository for [ExecBinary] and [ExecBinaryContent].
 type FSExecBinaryRepository struct {
 	dir string
-}
-
-// newExecBinaryRepository returns a new [ExecBinaryRepository] object.
-func newExecBinaryRepository(dir string) *FSExecBinaryRepository {
-	return &FSExecBinaryRepository{
-		dir: dir,
-	}
 }
 
 // newFSExecBinaryRepository returns a new [FSExecBinaryRepository] object.
@@ -32,8 +30,8 @@ func newFSExecBinaryRepository(dir string) *FSExecBinaryRepository {
 	}
 }
 
-// write [ExecBinaryContent] into file in given directory.
+// Write [ExecBinaryContent] into file in given repository.
 func (r *FSExecBinaryRepository) Write(meta ExecBinary, content ExecBinaryContent) error {
-	path := filepath.Join(r.dir, meta.name)
+	path := filepath.Join(r.dir, meta.Name)
 	return os.WriteFile(path, content, 0755)
 }
