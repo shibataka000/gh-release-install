@@ -15,8 +15,7 @@ func runE(ctx context.Context, repo string, tag string, patterns map[string]stri
 	if err != nil {
 		return err
 	}
-	execBinary := NewExecBinaryRepository(dir)
-	app := NewApplicationService(asset, execBinary)
+	app := NewApplicationService(asset, NewExecBinaryRepository(dir))
 
 	result, err := app.Find(ctx, tag, patterns)
 	if err != nil {

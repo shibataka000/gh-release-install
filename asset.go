@@ -27,7 +27,6 @@ type AssetContent []byte
 // extract [ExecBinaryContent] from [AssetContent] and returns it.
 func (a AssetContent) extract(execBinary ExecBinary) (ExecBinaryContent, error) {
 	b := []byte(a)
-
 	for !isExecBinaryContent(b) {
 		r, c, err := newReaderToExtract(b, execBinary)
 		if err != nil {
@@ -43,7 +42,6 @@ func (a AssetContent) extract(execBinary ExecBinary) (ExecBinaryContent, error) 
 			}
 		}
 	}
-
 	return ExecBinaryContent(b), nil
 }
 
@@ -112,7 +110,7 @@ func NewAssetRepository(repo string, progressBar io.Writer) (AssetRepository, er
 	if err != nil {
 		return nil, err
 	}
-	if templates, ok := defaultExternalAssetTemplates[r]; ok {
+	if templates, ok := externalAssetTemplates[r]; ok {
 		return newExternalAssetRepository(templates, progressBar), nil
 	}
 	return newGitHubAssetRepository(r, progressBar), nil
