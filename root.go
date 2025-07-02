@@ -1,5 +1,4 @@
-// Package cmd provides the command line interface for gh-release-install.
-package cmd
+package main
 
 import (
 	"context"
@@ -8,7 +7,6 @@ import (
 
 	"github.com/cli/go-gh/v2/pkg/prompter"
 	"github.com/cli/go-gh/v2/pkg/repository"
-	"github.com/shibataka000/gh-release-install/github"
 	"github.com/spf13/cobra"
 )
 
@@ -32,18 +30,18 @@ func NewCommand() *cobra.Command {
 				return err
 			}
 
-			result, err := app.Find(ctx, tag, patterns)
+			asset, execBinary, err := app.Find(ctx, tag, patterns)
 			if err != nil {
 				return err
 			}
 
-			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
+			prompt := fmt.Sprintf("Do you want to install %s from %s ?", execBinary.name, asset.downloadURL.String())
 			confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
 			if !confirm || err != nil {
 				return err
 			}
 
-			return app.Install(ctx, result, dir)
+			return app.Install(ctx, asset, execBinary, dir)
 		},
 		SilenceErrors: true,
 		SilenceUsage:  true,
@@ -51,7 +49,7 @@ func NewCommand() *cobra.Command {
 
 	command.Flags().StringVarP(&repo, "repo", "R", currentRepository(), "GitHub repository name. This should be [HOST/]OWNER/REPO format.")
 	command.Flags().StringVar(&tag, "tag", "", "GitHub release tag.")
-	command.Flags().StringToStringVar(&patterns, "pattern", github.DefaultPatterns, "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
+	command.Flags().StringToStringVar(&patterns, "pattern", DefaultPatterns, "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
 	command.Flags().StringVarP(&dir, "dir", "D", ".", "Directory where executable binary will be installed into.")
 
 	if err := command.MarkFlagRequired("tag"); err != nil {
@@ -62,13 +60,13 @@ func NewCommand() *cobra.Command {
 }
 
 // newApplicationService returns a new [github.com/shibataka000/gh-release-install/github.ApplicationService] object.
-func newApplicationService(repo string) (*github.ApplicationService, error) {
-	asset, err := github.NewAssetRepository(repo, os.Stdout)
+func newApplicationService(repo string) (*ApplicationService, error) {
+	asset, err := newAssetRepository(repo, os.Stdout)
 	if err != nil {
 		return nil, err
 	}
-	execBinary := github.NewExecBinaryRepository()
-	return github.NewApplicationService(asset, execBinary), nil
+	execBinary := newExecBinaryRepository()
+	return NewApplicationService(asset, execBinary), nil
 }
 
 // currentRepository returns the GitHub repository the current directory is tracking, or empty string if not found.
