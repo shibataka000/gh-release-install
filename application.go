@@ -10,17 +10,6 @@ type ApplicationService struct {
 	execBinary ExecBinaryRepository
 }
 
-// AssetRepository is an interface about repository for [Asset] and [AssetContent].
-type AssetRepository interface {
-	List(ctx context.Context, release Release) ([]Asset, error)
-	Download(ctx context.Context, asset Asset) (AssetContent, error)
-}
-
-// ExecBinaryRepository is an interface about repository for [ExecBinary] and [ExecBinaryContent].
-type ExecBinaryRepository interface {
-	Write(meta ExecBinary, content ExecBinaryContent) error
-}
-
 // FindResult represents the result of [ApplicationService.Find].
 type FindResult struct {
 	Asset      Asset

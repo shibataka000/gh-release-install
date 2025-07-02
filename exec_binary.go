@@ -8,6 +8,11 @@ type ExecBinary struct {
 // ExecBinaryContent represents a executable binary content in a GitHub release asset content.
 type ExecBinaryContent []byte
 
+// ExecBinaryRepository is an interface about repository for [ExecBinary] and [ExecBinaryContent].
+type ExecBinaryRepository interface {
+	Write(meta ExecBinary, content ExecBinaryContent) error
+}
+
 // NewExecBinaryRepository returns a new [ExecBinaryRepository] object.
 func NewExecBinaryRepository(dir string) ExecBinaryRepository {
 	return newFSExecBinaryRepository(dir)

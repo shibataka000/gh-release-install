@@ -5,6 +5,7 @@ import (
 	"archive/zip"
 	"bytes"
 	"compress/gzip"
+	"context"
 	"fmt"
 	"io"
 	"net/url"
@@ -102,6 +103,12 @@ func newZipReader(r io.ReaderAt, size int64, name string) (io.ReadCloser, error)
 		}
 	}
 	return nil, io.EOF
+}
+
+// AssetRepository is an interface about repository for [Asset] and [AssetContent].
+type AssetRepository interface {
+	List(ctx context.Context, release Release) ([]Asset, error)
+	Download(ctx context.Context, asset Asset) (AssetContent, error)
 }
 
 // NewAssetRepository returns a new [GitHubAssetRepository] object or [ExternalAssetRepository] object based on given repository name.
