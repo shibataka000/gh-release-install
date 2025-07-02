@@ -11,24 +11,24 @@ import (
 )
 
 func runE(ctx context.Context, repo string, tag string, patterns map[string]string, dir string) error {
-	asset, err := NewAssetRepository(repo, os.Stdout)
+	assetRepository, err := NewAssetRepository(repo, os.Stdout)
 	if err != nil {
 		return err
 	}
-	app := NewApplicationService(asset, NewExecBinaryRepository(dir))
+	app := NewApplicationService(assetRepository, NewExecBinaryRepository(dir))
 
-	result, err := app.Find(ctx, tag, patterns)
+	asset, execBinary, err := app.Find(ctx, tag, patterns)
 	if err != nil {
 		return err
 	}
 
-	prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
+	prompt := fmt.Sprintf("Do you want to install %s from %s ?", execBinary.Name, asset.DownloadURL.String())
 	confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
 	if !confirm || err != nil {
 		return err
 	}
 
-	return app.Install(ctx, result)
+	return app.Install(ctx, asset, execBinary)
 }
 
 func main() {
