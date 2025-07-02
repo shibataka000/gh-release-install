@@ -30,18 +30,18 @@ func NewCommand() *cobra.Command {
 				return err
 			}
 
-			asset, execBinary, err := app.Find(ctx, tag, patterns)
+			result, err := app.Find(ctx, tag, patterns)
 			if err != nil {
 				return err
 			}
 
-			prompt := fmt.Sprintf("Do you want to install %s from %s ?", execBinary.name, asset.downloadURL.String())
+			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.name, result.Asset.downloadURL.String())
 			confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
 			if !confirm || err != nil {
 				return err
 			}
 
-			return app.Install(ctx, asset, execBinary, dir)
+			return app.Install(ctx, result, dir)
 		},
 		SilenceErrors: true,
 		SilenceUsage:  true,
