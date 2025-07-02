@@ -32,7 +32,7 @@ func newGitHubAssetRepository(repo Repository, progressBar io.Writer) *GitHubAss
 func (r *GitHubAssetRepository) list(ctx context.Context, release Release) ([]Asset, error) {
 	assets := []Asset{}
 
-	repositoryRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.Owner, r.repo.Name, release.tag)
+	repositoryRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.Owner, r.repo.Name, release.Tag)
 	if err != nil {
 		return nil, err
 	}

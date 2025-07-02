@@ -21,7 +21,7 @@ type ExternalAssetTemplate struct {
 func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	var buf bytes.Buffer
 	data := map[string]string{
-		"Tag":    release.tag,
+		"Tag":    release.Tag,
 		"SemVer": release.semVer(),
 	}
 	if err := a.downloadURL.Execute(&buf, data); err != nil {

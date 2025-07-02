@@ -20,34 +20,24 @@ type Pattern struct {
 	execBinary *template.Template
 }
 
-// parsePattern returns a new [Pattern] object.
-func parsePattern(asset string, execBinary string) (Pattern, error) {
-	a, err := regexp.Compile(asset)
-	if err != nil {
-		return Pattern{}, err
-	}
-
-	b, err := template.New("ExecBinary").Parse(execBinary)
-	if err != nil {
-		return Pattern{}, err
-	}
-
-	return Pattern{
-		asset:      a,
-		execBinary: b,
-	}, nil
-}
-
 // parsePatternMap returns a new array of [Pattern] objects.
 // Map's keys should be regular expressions of GitHub release asset download URL and values should be templates of executable binary name.
 func parsePatternMap(patterns map[string]string) ([]Pattern, error) {
 	ps := []Pattern{}
 	for asset, execBinary := range patterns {
-		p, err := parsePattern(asset, execBinary)
+		a, err := regexp.Compile(asset)
 		if err != nil {
 			return nil, err
 		}
-		ps = append(ps, p)
+
+		b, err := template.New("ExecBinary").Parse(execBinary)
+		if err != nil {
+			return nil, err
+		}
+		ps = append(ps, Pattern{
+			asset:      a,
+			execBinary: b,
+		})
 	}
 	return ps, nil
 }

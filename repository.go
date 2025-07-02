@@ -5,7 +5,11 @@ import (
 )
 
 // Repository represents a GitHub repository.
-type Repository repository.Repository
+type Repository struct {
+	Host  string
+	Name  string
+	Owner string
+}
 
 // parseRepository extracts the repository information from the following string formats: "OWNER/REPO", "HOST/OWNER/REPO", and a full URL.
 // If the format does not specify a host, use the config to determine a host.
