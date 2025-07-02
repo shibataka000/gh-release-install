@@ -4,15 +4,35 @@ package main
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/cli/go-gh/v2/pkg/prompter"
 	"github.com/spf13/cobra"
 )
 
-// NewCommand returns cobra command
-func NewCommand() *cobra.Command {
+func runE(ctx context.Context, repo string, tag string, patterns map[string]string, dir string) error {
+	asset, err := NewAssetRepository(repo, os.Stdout)
+	if err != nil {
+		return err
+	}
+	execBinary := NewExecBinaryRepository(dir)
+	app := NewApplicationService(asset, execBinary)
+
+	result, err := app.Find(ctx, tag, patterns)
+	if err != nil {
+		return err
+	}
+
+	prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
+	confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
+	if !confirm || err != nil {
+		return err
+	}
+
+	return app.Install(ctx, result)
+}
+
+func main() {
 	var (
 		repo     string
 		tag      string
@@ -23,29 +43,10 @@ func NewCommand() *cobra.Command {
 	command := &cobra.Command{
 		Use:   "gh-release-install",
 		Short: "Install executable binary from GitHub release asset.",
-		RunE: func(_ *cobra.Command, _ []string) error {
-			ctx := context.Background()
-
-			app, err := newApplicationService(repo)
-			if err != nil {
-				return err
-			}
-
-			result, err := app.Find(ctx, tag, patterns)
-			if err != nil {
-				return err
-			}
-
-			prompt := fmt.Sprintf("Do you want to install %s from %s ?", result.ExecBinary.Name, result.Asset.DownloadURL.String())
-			confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
-			if !confirm || err != nil {
-				return err
-			}
-
-			return app.Install(ctx, result, dir)
+		RunE: func(cmd *cobra.Command, _ []string) error {
+			return runE(cmd.Context(), repo, tag, patterns, dir)
 		},
-		SilenceErrors: true,
-		SilenceUsage:  true,
+		SilenceUsage: true,
 	}
 
 	command.Flags().StringVarP(&repo, "repo", "R", currentRepository(), "GitHub repository name. This should be [HOST/]OWNER/REPO format.")
@@ -57,22 +58,7 @@ func NewCommand() *cobra.Command {
 		panic(err)
 	}
 
-	return command
-}
-
-// newApplicationService returns a new [github.com/shibataka000/gh-release-install/github.ApplicationService] object.
-func newApplicationService(repo string) (*ApplicationService, error) {
-	asset, err := NewAssetRepository(repo, os.Stdout)
-	if err != nil {
-		return nil, err
-	}
-	execBinary := newExecBinaryRepository()
-	return NewApplicationService(asset, execBinary), nil
-}
-
-func main() {
-	log.SetFlags(0)
-	if err := NewCommand().Execute(); err != nil {
-		log.Fatal(err)
+	if err := command.ExecuteContext(context.Background()); err != nil {
+		os.Exit(1)
 	}
 }
