@@ -20,14 +20,6 @@ type Pattern struct {
 	execBinary *template.Template
 }
 
-// newPattern returns a new [Pattern] object.
-func newPattern(asset *regexp.Regexp, execBinary *template.Template) Pattern {
-	return Pattern{
-		asset:      asset,
-		execBinary: execBinary,
-	}
-}
-
 // parsePattern returns a new [Pattern] object.
 func parsePattern(asset string, execBinary string) (Pattern, error) {
 	a, err := regexp.Compile(asset)
@@ -40,7 +32,10 @@ func parsePattern(asset string, execBinary string) (Pattern, error) {
 		return Pattern{}, err
 	}
 
-	return newPattern(a, b), nil
+	return Pattern{
+		asset:      a,
+		execBinary: b,
+	}, nil
 }
 
 // parsePatternMap returns a new array of [Pattern] objects.
@@ -90,7 +85,9 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 		return ExecBinary{}, err
 	}
 
-	return newExecBinary(b.String()), nil
+	return ExecBinary{
+		name: b.String(),
+	}, nil
 }
 
 // findAssetAndPattern find [Asset] and [Pattern] matching and returns them.
