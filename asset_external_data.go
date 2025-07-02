@@ -4,16 +4,16 @@ import "text/template"
 
 // defaultExternalAssetTemplates are templates of known release asset hosted on server other than GitHub.
 var defaultExternalAssetTemplates = map[Repository][]ExternalAssetTemplate{
-	Repository{host: "github.com", owner: "gravitational", name: "teleport"}: {
+	Repository{Host: "github.com", Owner: "gravitational", Name: "teleport"}: {
 		must(parseExternalAssetTemplate("https://cdn.teleport.dev/teleport-v{{.SemVer}}-linux-amd64-bin.tar.gz")),
 	},
-	Repository{host: "github.com", owner: "hashicorp", name: "terraform"}: {
+	Repository{Host: "github.com", Owner: "hashicorp", Name: "terraform"}: {
 		must(parseExternalAssetTemplate("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_linux_amd64.zip")),
 	},
-	Repository{host: "github.com", owner: "helm", name: "helm"}: {
+	Repository{Host: "github.com", Owner: "helm", Name: "helm"}: {
 		must(parseExternalAssetTemplate("https://get.helm.sh/helm-{{.Tag}}-linux-amd64.tar.gz")),
 	},
-	Repository{host: "github.com", owner: "kubernetes", name: "kubernetes"}: {
+	Repository{Host: "github.com", Owner: "kubernetes", Name: "kubernetes"}: {
 		must(parseExternalAssetTemplate("https://dl.k8s.io/release/{{.Tag}}/bin/linux/amd64/kubectl")),
 	},
 }
