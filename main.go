@@ -41,7 +41,7 @@ func main() {
 
 	command := &cobra.Command{
 		Use:   "gh-release-install",
-		Short: "Install executable binary from GitHub release asset.",
+		Short: "Install an executable binary from a GitHub release asset.",
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runE(cmd.Context(), repo, tag, patterns, dir)
 		},

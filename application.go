@@ -18,7 +18,7 @@ func NewApplicationService(asset AssetRepository, execBinary ExecBinaryRepositor
 	}
 }
 
-// Find a GitHub release asset in given release which matches given patterns and returns it and an executable binary in it.
+// Find finds a GitHub release asset in given release which matches given patterns and returns it and an executable binary in it.
 func (app *ApplicationService) Find(ctx context.Context, tag string, patterns map[string]string) (Asset, ExecBinary, error) {
 	ps, err := parsePatterns(patterns)
 	if err != nil {
