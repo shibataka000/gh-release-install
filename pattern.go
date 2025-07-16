@@ -80,7 +80,7 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 	}, nil
 }
 
-// findAssetAndPattern find [Asset] and [Pattern] matching and returns them.
+// findAssetAndPattern finds [Asset] and [Pattern] matching and returns them.
 // Pattern with higher priority is prioritized over pattern with lower priority.
 func findAssetAndPattern(assets []Asset, patterns []Pattern) (Asset, Pattern, error) {
 	cloned := slices.Clone(patterns)

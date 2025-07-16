@@ -25,7 +25,7 @@ type Asset struct {
 // AssetContent represents a GitHub release asset content.
 type AssetContent []byte
 
-// extract [ExecBinaryContent] from [AssetContent] and returns it.
+// extracts [ExecBinaryContent] from [AssetContent] and returns it.
 func (a AssetContent) extract(execBinary ExecBinary) (ExecBinaryContent, error) {
 	b := []byte(a)
 	for !isExecBinaryContent(b) {
@@ -53,7 +53,7 @@ func isExecBinaryContent(b []byte) bool {
 	return slices.Contains(binaryMIMEs, mime.String())
 }
 
-// newReaderToExtract returns [io.Reader] to unarchive/decompress given bytes.
+// newReaderToExtract returns an [io.Reader] to unarchive/decompress given bytes.
 // Closing [io.ReadCloser] is caller's responsibility if it is not nil.
 func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, error) {
 	br := bytes.NewReader(b)

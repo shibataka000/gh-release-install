@@ -17,7 +17,7 @@ func newFSExecBinaryRepository(dir string) *FSExecBinaryRepository {
 	}
 }
 
-// Write [ExecBinaryContent] into file in given repository.
+// Writes [ExecBinaryContent] into a file in given repository.
 func (r *FSExecBinaryRepository) Write(meta ExecBinary, content ExecBinaryContent) error {
 	path := filepath.Join(r.dir, meta.Name)
 	return os.WriteFile(path, content, 0755)

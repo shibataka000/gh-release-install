@@ -60,7 +60,7 @@ func parseExternalAssetTemplate(downloadURL string) (ExternalAssetTemplate, erro
 	}, nil
 }
 
-// execute applies a [ExternalAssetTemplate] to [Release] object and returns [Asset] object.
+// execute applies an [ExternalAssetTemplate] to [Release] object and returns [Asset] object.
 func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	var buf bytes.Buffer
 	data := map[string]string{
@@ -91,7 +91,7 @@ func newExternalAssetRepository(templates []ExternalAssetTemplate, progressBar i
 	}
 }
 
-// List GitHub release assets in a given GitHub release and returns them.
+// List lists GitHub release assets in a given GitHub release and returns them.
 func (r *ExternalAssetRepository) List(_ context.Context, release Release) ([]Asset, error) {
 	assets := []Asset{}
 	for _, tmpl := range r.templates {
@@ -104,7 +104,7 @@ func (r *ExternalAssetRepository) List(_ context.Context, release Release) ([]As
 	return assets, nil
 }
 
-// Download a GitHub release asset content and returns it.
+// Download downloads a GitHub release asset content and returns it.
 func (r *ExternalAssetRepository) Download(_ context.Context, asset Asset) (AssetContent, error) {
 	resp, err := http.Get(asset.DownloadURL.String())
 	if err != nil {

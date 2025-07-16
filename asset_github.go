@@ -28,7 +28,7 @@ func newGitHubAssetRepository(repo Repository, progressBar io.Writer) *GitHubAss
 	}
 }
 
-// List GitHub release assets in a given GitHub release and returns them.
+// List lists GitHub release assets in a given GitHub release and returns them.
 func (r *GitHubAssetRepository) List(ctx context.Context, release Release) ([]Asset, error) {
 	assets := []Asset{}
 
@@ -60,7 +60,7 @@ func (r *GitHubAssetRepository) List(ctx context.Context, release Release) ([]As
 	return assets, nil
 }
 
-// Download a GitHub release asset content and returns it.
+// Download downloads a GitHub release asset content and returns it.
 func (r *GitHubAssetRepository) Download(ctx context.Context, asset Asset) (AssetContent, error) {
 	releaseAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.Owner, r.repo.Name, asset.ID)
 	if err != nil {

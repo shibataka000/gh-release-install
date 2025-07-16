@@ -2,12 +2,12 @@
 
 [![Test](https://github.com/shibataka000/gh-release-install/actions/workflows/test.yaml/badge.svg)](https://github.com/shibataka000/gh-release-install/actions/workflows/test.yaml)
 
-Install executable binary from GitHub release asset.
+Install an executable binary from a GitHub release asset.
 
 ## Usage
 
 ```
-Install executable binary from GitHub release asset.
+Install an executable binary from a GitHub release asset.
 
 Usage:
   gh-release-install [flags]
