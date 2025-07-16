@@ -1,7 +1,8 @@
-package github
+package main
 
 import (
 	"bytes"
+	"errors"
 	"regexp"
 	"slices"
 	"strconv"
@@ -20,39 +21,23 @@ type Pattern struct {
 	execBinary *template.Template
 }
 
-// newPattern returns a new [Pattern] object.
-func newPattern(asset *regexp.Regexp, execBinary *template.Template) Pattern {
-	return Pattern{
-		asset:      asset,
-		execBinary: execBinary,
-	}
-}
-
-// parsePattern returns a new [Pattern] object.
-func parsePattern(asset string, execBinary string) (Pattern, error) {
-	a, err := regexp.Compile(asset)
-	if err != nil {
-		return Pattern{}, err
-	}
-
-	b, err := template.New("ExecBinary").Parse(execBinary)
-	if err != nil {
-		return Pattern{}, err
-	}
-
-	return newPattern(a, b), nil
-}
-
-// parsePatternMap returns a new array of [Pattern] objects.
+// parsePatterns returns a new array of [Pattern] objects.
 // Map's keys should be regular expressions of GitHub release asset download URL and values should be templates of executable binary name.
-func parsePatternMap(patterns map[string]string) ([]Pattern, error) {
+func parsePatterns(patterns map[string]string) ([]Pattern, error) {
 	ps := []Pattern{}
 	for asset, execBinary := range patterns {
-		p, err := parsePattern(asset, execBinary)
+		a, err := regexp.Compile(asset)
 		if err != nil {
 			return nil, err
 		}
-		ps = append(ps, p)
+		b, err := template.New("ExecBinary").Parse(execBinary)
+		if err != nil {
+			return nil, err
+		}
+		ps = append(ps, Pattern{
+			asset:      a,
+			execBinary: b,
+		})
 	}
 	return ps, nil
 }
@@ -90,7 +75,9 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 		return ExecBinary{}, err
 	}
 
-	return newExecBinary(b.String()), nil
+	return ExecBinary{
+		Name: b.String(),
+	}, nil
 }
 
 // findAssetAndPattern find [Asset] and [Pattern] matching and returns them.
@@ -109,5 +96,5 @@ func findAssetAndPattern(assets []Asset, patterns []Pattern) (Asset, Pattern, er
 		}
 	}
 
-	return Asset{}, Pattern{}, ErrNoAssetsMatchPattern
+	return Asset{}, Pattern{}, errors.New("no assets match the pattern")
 }
