@@ -14,31 +14,35 @@ import (
 
 // externalAssetTemplates are templates of known release asset hosted on server other than GitHub.
 var externalAssetTemplates = map[Repository][]ExternalAssetTemplate{
+	// https://github.com/gravitational/teleport
 	{
-		Host:  "github.com",
-		Owner: "gravitational",
-		Name:  "teleport",
+		host:  "github.com",
+		owner: "gravitational",
+		name:  "teleport",
 	}: {
 		must(parseExternalAssetTemplate("https://cdn.teleport.dev/teleport-v{{.SemVer}}-linux-amd64-bin.tar.gz")),
 	},
+	// https://github.com/hashicorp/terraform
 	{
-		Host:  "github.com",
-		Owner: "hashicorp",
-		Name:  "terraform",
+		host:  "github.com",
+		owner: "hashicorp",
+		name:  "terraform",
 	}: {
 		must(parseExternalAssetTemplate("https://releases.hashicorp.com/terraform/{{.SemVer}}/terraform_{{.SemVer}}_linux_amd64.zip")),
 	},
+	// https://github.com/helm/helm
 	{
-		Host:  "github.com",
-		Owner: "helm",
-		Name:  "helm",
+		host:  "github.com",
+		owner: "helm",
+		name:  "helm",
 	}: {
 		must(parseExternalAssetTemplate("https://get.helm.sh/helm-{{.Tag}}-linux-amd64.tar.gz")),
 	},
+	// https://github.com/kubernetes/kubernetes
 	{
-		Host:  "github.com",
-		Owner: "kubernetes",
-		Name:  "kubernetes",
+		host:  "github.com",
+		owner: "kubernetes",
+		name:  "kubernetes",
 	}: {
 		must(parseExternalAssetTemplate("https://dl.k8s.io/release/{{.Tag}}/bin/linux/amd64/kubectl")),
 	},
@@ -64,7 +68,7 @@ func parseExternalAssetTemplate(downloadURL string) (ExternalAssetTemplate, erro
 func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	var buf bytes.Buffer
 	data := map[string]string{
-		"Tag":    release.Tag,
+		"Tag":    release.tag,
 		"SemVer": release.semVer(),
 	}
 	if err := a.downloadURL.Execute(&buf, data); err != nil {
@@ -72,8 +76,8 @@ func (a ExternalAssetTemplate) execute(release Release) (Asset, error) {
 	}
 	downloadURL, err := url.Parse(buf.String())
 	return Asset{
-		ID:          0, // fake ID of [Asset] hosted on server other than GitHub.
-		DownloadURL: downloadURL,
+		id:          0, // fake ID of [Asset] hosted on server other than GitHub.
+		downloadURL: downloadURL,
 	}, err
 }
 
@@ -91,8 +95,8 @@ func newExternalAssetRepository(templates []ExternalAssetTemplate, progressBar i
 	}
 }
 
-// List lists GitHub release assets in a given GitHub release and returns them.
-func (r *ExternalAssetRepository) List(_ context.Context, release Release) ([]Asset, error) {
+// list lists GitHub release assets in a given GitHub release and returns them.
+func (r *ExternalAssetRepository) list(_ context.Context, release Release) ([]Asset, error) {
 	assets := []Asset{}
 	for _, tmpl := range r.templates {
 		asset, err := tmpl.execute(release)
@@ -104,9 +108,9 @@ func (r *ExternalAssetRepository) List(_ context.Context, release Release) ([]As
 	return assets, nil
 }
 
-// Download downloads a GitHub release asset content and returns it.
-func (r *ExternalAssetRepository) Download(_ context.Context, asset Asset) (AssetContent, error) {
-	resp, err := http.Get(asset.DownloadURL.String())
+// download downloads a GitHub release asset content and returns it.
+func (r *ExternalAssetRepository) download(_ context.Context, asset Asset) (AssetContent, error) {
+	resp, err := http.Get(asset.downloadURL.String())
 	if err != nil {
 		return nil, err
 	}

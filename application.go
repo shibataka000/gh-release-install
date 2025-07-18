@@ -10,23 +10,23 @@ type ApplicationService struct {
 	execBinary ExecBinaryRepository
 }
 
-// NewApplicationService returns a new [ApplicationService] object.
-func NewApplicationService(asset AssetRepository, execBinary ExecBinaryRepository) *ApplicationService {
+// newApplicationService returns a new [ApplicationService] object.
+func newApplicationService(asset AssetRepository, execBinary ExecBinaryRepository) *ApplicationService {
 	return &ApplicationService{
 		asset:      asset,
 		execBinary: execBinary,
 	}
 }
 
-// Find finds a GitHub release asset in given release which matches given patterns and returns it and an executable binary in it.
-func (app *ApplicationService) Find(ctx context.Context, tag string, patterns map[string]string) (Asset, ExecBinary, error) {
+// find finds a GitHub release asset in given release which matches given patterns and returns it and an executable binary in it.
+func (app *ApplicationService) find(ctx context.Context, tag string, patterns map[string]string) (Asset, ExecBinary, error) {
 	ps, err := parsePatterns(patterns)
 	if err != nil {
 		return Asset{}, ExecBinary{}, err
 	}
 
-	assets, err := app.asset.List(ctx, Release{
-		Tag: tag,
+	assets, err := app.asset.list(ctx, Release{
+		tag: tag,
 	})
 	if err != nil {
 		return Asset{}, ExecBinary{}, err
@@ -45,9 +45,9 @@ func (app *ApplicationService) Find(ctx context.Context, tag string, patterns ma
 	return asset, execBinary, nil
 }
 
-// Install downloads a GitHub release asset, extracts an executable binary from it, and writes it.
-func (app *ApplicationService) Install(ctx context.Context, asset Asset, execBinary ExecBinary) error {
-	assetContent, err := app.asset.Download(ctx, asset)
+// install downloads a GitHub release asset, extracts an executable binary from it, and writes it.
+func (app *ApplicationService) install(ctx context.Context, asset Asset, execBinary ExecBinary) error {
+	assetContent, err := app.asset.download(ctx, asset)
 	if err != nil {
 		return err
 	}
@@ -57,5 +57,5 @@ func (app *ApplicationService) Install(ctx context.Context, asset Asset, execBin
 		return err
 	}
 
-	return app.execBinary.Write(execBinary, execBinaryContent)
+	return app.execBinary.write(execBinary, execBinaryContent)
 }

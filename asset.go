@@ -18,8 +18,8 @@ import (
 
 // Asset represents a GitHub release asset.
 type Asset struct {
-	ID          int64
-	DownloadURL *url.URL
+	id          int64
+	downloadURL *url.URL
 }
 
 // AssetContent represents a GitHub release asset content.
@@ -67,10 +67,10 @@ func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, 
 		r, err := xz.NewReader(br)
 		return r, nil, err
 	case "application/x-tar":
-		r, err := newTarReader(br, execBinary.Name)
+		r, err := newTarReader(br, execBinary.name)
 		return r, nil, err
 	case "application/zip":
-		r, err := newZipReader(br, br.Size(), execBinary.Name)
+		r, err := newZipReader(br, br.Size(), execBinary.name)
 		return r, r, err
 	default:
 		return nil, nil, fmt.Errorf("MIME type of asset content was unexpected: %s", mime.String())
@@ -107,12 +107,12 @@ func newZipReader(r io.ReaderAt, size int64, name string) (io.ReadCloser, error)
 
 // AssetRepository is an interface about repository for [Asset] and [AssetContent].
 type AssetRepository interface {
-	List(ctx context.Context, release Release) ([]Asset, error)
-	Download(ctx context.Context, asset Asset) (AssetContent, error)
+	list(ctx context.Context, release Release) ([]Asset, error)
+	download(ctx context.Context, asset Asset) (AssetContent, error)
 }
 
-// NewAssetRepository returns a new [GitHubAssetRepository] object or [ExternalAssetRepository] object based on given repository name.
-func NewAssetRepository(repo string, progressBar io.Writer) (AssetRepository, error) {
+// newAssetRepository returns a new [GitHubAssetRepository] object or [ExternalAssetRepository] object based on given repository name.
+func newAssetRepository(repo string, progressBar io.Writer) (AssetRepository, error) {
 	r, err := parseRepository(repo)
 	if err != nil {
 		return nil, err
