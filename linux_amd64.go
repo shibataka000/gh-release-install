@@ -1,8 +1,8 @@
 package main
 
 var (
-	// DefaultPatterns are recommended patterns for linux/amd64.
-	DefaultPatterns = map[string]string{
+	// defaultPatterns are recommended patterns for linux/amd64.
+	defaultPatterns = map[string]string{
 		// These are recommended patterns for general repository.
 		`(?i)^.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|64bit))?(\.tar\.gz|\.tar\.xz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
 

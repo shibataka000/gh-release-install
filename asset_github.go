@@ -20,7 +20,7 @@ type GitHubAssetRepository struct {
 
 // newGitHubAssetRepository returns a new [GitHubAssetRepository] object.
 func newGitHubAssetRepository(repo Repository, progressBar io.Writer) *GitHubAssetRepository {
-	token, _ := auth.TokenForHost(repo.Host)
+	token, _ := auth.TokenForHost(repo.host)
 	return &GitHubAssetRepository{
 		client:      github.NewClient(http.DefaultClient).WithAuthToken(token),
 		repo:        repo,
@@ -28,17 +28,17 @@ func newGitHubAssetRepository(repo Repository, progressBar io.Writer) *GitHubAss
 	}
 }
 
-// List lists GitHub release assets in a given GitHub release and returns them.
-func (r *GitHubAssetRepository) List(ctx context.Context, release Release) ([]Asset, error) {
+// list lists GitHub release assets in a given GitHub release and returns them.
+func (r *GitHubAssetRepository) list(ctx context.Context, release Release) ([]Asset, error) {
 	assets := []Asset{}
 
-	repositoryRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.Owner, r.repo.Name, release.Tag)
+	repositoryRelease, _, err := r.client.Repositories.GetReleaseByTag(ctx, r.repo.owner, r.repo.name, release.tag)
 	if err != nil {
 		return nil, err
 	}
 
 	for page := 1; page != 0; {
-		releaseAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, r.repo.Owner, r.repo.Name, repositoryRelease.GetID(), &github.ListOptions{
+		releaseAssets, resp, err := r.client.Repositories.ListReleaseAssets(ctx, r.repo.owner, r.repo.name, repositoryRelease.GetID(), &github.ListOptions{
 			Page: page,
 		})
 		if err != nil {
@@ -50,8 +50,8 @@ func (r *GitHubAssetRepository) List(ctx context.Context, release Release) ([]As
 				return nil, err
 			}
 			assets = append(assets, Asset{
-				ID:          releaseAsset.GetID(),
-				DownloadURL: downloadURL,
+				id:          releaseAsset.GetID(),
+				downloadURL: downloadURL,
 			})
 		}
 		page = resp.NextPage
@@ -60,14 +60,14 @@ func (r *GitHubAssetRepository) List(ctx context.Context, release Release) ([]As
 	return assets, nil
 }
 
-// Download downloads a GitHub release asset content and returns it.
-func (r *GitHubAssetRepository) Download(ctx context.Context, asset Asset) (AssetContent, error) {
-	releaseAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.Owner, r.repo.Name, asset.ID)
+// download downloads a GitHub release asset content and returns it.
+func (r *GitHubAssetRepository) download(ctx context.Context, asset Asset) (AssetContent, error) {
+	releaseAsset, _, err := r.client.Repositories.GetReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.id)
 	if err != nil {
 		return nil, err
 	}
 
-	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, r.repo.Owner, r.repo.Name, asset.ID, http.DefaultClient)
+	rc, _, err := r.client.Repositories.DownloadReleaseAsset(ctx, r.repo.owner, r.repo.name, asset.id, http.DefaultClient)
 	if err != nil {
 		return nil, err
 	}

@@ -44,7 +44,7 @@ func parsePatterns(patterns map[string]string) ([]Pattern, error) {
 
 // match returns true if regular expression in pattern matches given GitHub release asset download URL.
 func (p Pattern) match(asset Asset) bool {
-	return p.asset.Match([]byte(asset.DownloadURL.String()))
+	return p.asset.Match([]byte(asset.downloadURL.String()))
 }
 
 // priority returns a literal prefix length of regular expression of GitHub release asset download URL as priority of pattern.
@@ -57,7 +57,7 @@ func (p Pattern) priority() int {
 // execute applies a template of executable binary name to values of capturing groups in regular expression of GitHub release asset download URL and returns [ExecBinary] object.
 func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 	data := map[string]string{}
-	submatch := p.asset.FindStringSubmatch(asset.DownloadURL.String())
+	submatch := p.asset.FindStringSubmatch(asset.downloadURL.String())
 
 	for i := range submatch {
 		data[strconv.Itoa(i)] = submatch[i]
@@ -76,7 +76,7 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 	}
 
 	return ExecBinary{
-		Name: b.String(),
+		name: b.String(),
 	}, nil
 }
 

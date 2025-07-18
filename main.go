@@ -1,4 +1,3 @@
-// Package main provides the main entry point for the gh-release-install command line tool.
 package main
 
 import (
@@ -11,24 +10,25 @@ import (
 )
 
 func runE(ctx context.Context, repo string, tag string, patterns map[string]string, dir string) error {
-	assetRepository, err := NewAssetRepository(repo, os.Stdout)
+	assetRepository, err := newAssetRepository(repo, os.Stdout)
 	if err != nil {
 		return err
 	}
-	app := NewApplicationService(assetRepository, NewExecBinaryRepository(dir))
+	execBinaryRepository := newExecBinaryRepository(dir)
+	app := newApplicationService(assetRepository, execBinaryRepository)
 
-	asset, execBinary, err := app.Find(ctx, tag, patterns)
+	asset, execBinary, err := app.find(ctx, tag, patterns)
 	if err != nil {
 		return err
 	}
 
-	prompt := fmt.Sprintf("Do you want to install %s from %s ?", execBinary.Name, asset.DownloadURL.String())
+	prompt := fmt.Sprintf("Do you want to install %s from %s ?", execBinary.name, asset.downloadURL.String())
 	confirm, err := prompter.New(os.Stdin, os.Stdout, os.Stderr).Confirm(prompt, true)
 	if !confirm || err != nil {
 		return err
 	}
 
-	return app.Install(ctx, asset, execBinary)
+	return app.install(ctx, asset, execBinary)
 }
 
 func main() {
@@ -50,12 +50,12 @@ func main() {
 
 	currentRepositoryName := ""
 	if r, err := currentRepository(); err == nil {
-		currentRepositoryName = fmt.Sprintf("%s/%s/%s", r.Host, r.Owner, r.Name)
+		currentRepositoryName = fmt.Sprintf("%s/%s/%s", r.host, r.owner, r.name)
 	}
 
 	command.Flags().StringVarP(&repo, "repo", "R", currentRepositoryName, "GitHub repository name. This should be [HOST/]OWNER/REPO format.")
 	command.Flags().StringVar(&tag, "tag", "", "GitHub release tag.")
-	command.Flags().StringToStringVar(&patterns, "pattern", DefaultPatterns, "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
+	command.Flags().StringToStringVar(&patterns, "pattern", defaultPatterns, "Map whose key should be regular expressions of GitHub release asset download URL to download and value should be templates of executable binary name to install.")
 	command.Flags().StringVarP(&dir, "dir", "D", ".", "Directory where executable binary will be installed into.")
 
 	if err := command.MarkFlagRequired("tag"); err != nil {
