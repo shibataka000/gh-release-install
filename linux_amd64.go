@@ -11,6 +11,7 @@ var (
 		`https://github\.com/istio/istio/releases/download/.+/istioctl-\d+\.\d+\.\d+-linux-amd64\.tar\.gz$`:      "istioctl",
 		`https://github\.com/starship/starship/releases/download/.+/starship-x86_64-unknown-linux-gnu\.tar\.gz$`: "starship",
 		`https://github\.com/protocolbuffers/protobuf/releases/download/.+/protoc-\d+\.\d+-linux-x86_64\.zip$`:   "protoc",
+		`https://github\.com/astral-sh/uv/releases/download/.+/uv-x86_64-unknown-linux-gnu\.tar\.gz$`:            "uv",
 
 		// These are recommended patterns for specific repository whose release assets are hosted on server other than GitHub.
 		// These should start with literals containing host to avoid conflict with other patterns.
