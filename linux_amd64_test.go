@@ -56,6 +56,18 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			test: exec.Command("./kubectl-argo-rollouts", "version"),
 		},
 		{
+			repo: "astral-sh/uv",
+			tag:  "0.8.0",
+			asset: Asset{
+				id:          273924589,
+				downloadURL: must(url.Parse("https://github.com/astral-sh/uv/releases/download/0.8.0/uv-x86_64-unknown-linux-gnu.tar.gz")),
+			},
+			execBinary: ExecBinary{
+				name: "uv",
+			},
+			test: exec.Command("./uv", "--version"),
+		},
+		{
 			repo: "argoproj/argo-workflows",
 			tag:  "v3.5.8",
 			asset: Asset{
