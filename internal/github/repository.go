@@ -1,4 +1,4 @@
-package main
+package github
 
 import (
 	"github.com/cli/go-gh/v2/pkg/repository"
@@ -6,9 +6,9 @@ import (
 
 // Repository represents a GitHub repository.
 type Repository struct {
-	host  string
-	name  string
-	owner string
+	Host  string
+	Owner string
+	Name  string
 }
 
 // parseRepository extracts the repository information from the following string formats: "OWNER/REPO", "HOST/OWNER/REPO", and a full URL.
@@ -19,9 +19,9 @@ func parseRepository(s string) (Repository, error) {
 		return Repository{}, err
 	}
 	return Repository{
-		host:  repo.Host,
-		owner: repo.Owner,
-		name:  repo.Name,
+		Host:  repo.Host,
+		Owner: repo.Owner,
+		Name:  repo.Name,
 	}, nil
 }
 
@@ -32,8 +32,8 @@ func currentRepository() (Repository, error) {
 		return Repository{}, err
 	}
 	return Repository{
-		host:  repo.Host,
-		owner: repo.Owner,
-		name:  repo.Name,
+		Host:  repo.Host,
+		Owner: repo.Owner,
+		Name:  repo.Name,
 	}, nil
 }

@@ -1,4 +1,4 @@
-package main
+package pattern
 
 var (
 	// defaultPatterns are recommended patterns for linux/amd64.

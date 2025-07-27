@@ -1,17 +1,25 @@
-package main
+package github
 
 import (
 	"os"
 	"path/filepath"
 )
 
+// ExecBinary represents a executable binary in a GitHub release asset.
+type ExecBinary struct {
+	name string
+}
+
+// ExecBinaryContent represents an executable binary content in a GitHub release asset content.
+type ExecBinaryContent []byte
+
 // FSExecBinaryRepository is a repository for [ExecBinary] and [ExecBinaryContent].
 type FSExecBinaryRepository struct {
 	dir string
 }
 
-// newFSExecBinaryRepository returns a new [FSExecBinaryRepository] object.
-func newFSExecBinaryRepository(dir string) *FSExecBinaryRepository {
+// newExecBinaryRepository returns a new [FSExecBinaryRepository] object.
+func newExecBinaryRepository(dir string) *FSExecBinaryRepository {
 	return &FSExecBinaryRepository{
 		dir: dir,
 	}
