@@ -7,6 +7,8 @@ import (
 	"slices"
 	"strconv"
 	"text/template"
+
+	"github.com/shibataka000/gh-release-install/internal/github"
 )
 
 // Pattern represents a pair of regular expression of GitHub release asset download URL and template of executable binary name.
@@ -43,8 +45,8 @@ func parsePatterns(patterns map[string]string) ([]Pattern, error) {
 }
 
 // match returns true if regular expression in pattern matches given GitHub release asset download URL.
-func (p Pattern) match(asset Asset) bool {
-	return p.asset.Match([]byte(asset.downloadURL.String()))
+func (p Pattern) match(asset github.Asset) bool {
+	return p.asset.Match([]byte(asset.DownloadURL.String()))
 }
 
 // priority returns a literal prefix length of regular expression of GitHub release asset download URL as priority of pattern.
@@ -55,9 +57,9 @@ func (p Pattern) priority() int {
 }
 
 // execute applies a template of executable binary name to values of capturing groups in regular expression of GitHub release asset download URL and returns [ExecBinary] object.
-func (p Pattern) execute(asset Asset) (ExecBinary, error) {
+func (p Pattern) execute(asset github.Asset) (github.ExecBinary, error) {
 	data := map[string]string{}
-	submatch := p.asset.FindStringSubmatch(asset.downloadURL.String())
+	submatch := p.asset.FindStringSubmatch(asset.DownloadURL.String())
 
 	for i := range submatch {
 		data[strconv.Itoa(i)] = submatch[i]
@@ -72,17 +74,17 @@ func (p Pattern) execute(asset Asset) (ExecBinary, error) {
 
 	var b bytes.Buffer
 	if err := p.execBinary.Execute(&b, data); err != nil {
-		return ExecBinary{}, err
+		return github.ExecBinary{}, err
 	}
 
-	return ExecBinary{
-		name: b.String(),
+	return github.ExecBinary{
+		Name: b.String(),
 	}, nil
 }
 
 // findAssetAndPattern finds [Asset] and [Pattern] matching and returns them.
 // Pattern with higher priority is prioritized over pattern with lower priority.
-func findAssetAndPattern(assets []Asset, patterns []Pattern) (Asset, Pattern, error) {
+func findAssetAndPattern(assets []github.Asset, patterns []Pattern) (github.Asset, Pattern, error) {
 	cloned := slices.Clone(patterns)
 	slices.SortFunc(cloned, func(p1, p2 Pattern) int {
 		return p2.priority() - p1.priority()
@@ -96,5 +98,5 @@ func findAssetAndPattern(assets []Asset, patterns []Pattern) (Asset, Pattern, er
 		}
 	}
 
-	return Asset{}, Pattern{}, errors.New("no assets match the pattern")
+	return github.Asset{}, Pattern{}, errors.New("no assets match the pattern")
 }

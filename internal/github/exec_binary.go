@@ -7,7 +7,7 @@ import (
 
 // ExecBinary represents a executable binary in a GitHub release asset.
 type ExecBinary struct {
-	name string
+	Name string
 }
 
 // ExecBinaryContent represents an executable binary content in a GitHub release asset content.
@@ -27,6 +27,6 @@ func newExecBinaryRepository(dir string) *FSExecBinaryRepository {
 
 // write writes [ExecBinaryContent] into a file in given repository.
 func (r *FSExecBinaryRepository) write(meta ExecBinary, content ExecBinaryContent) error {
-	path := filepath.Join(r.dir, meta.name)
+	path := filepath.Join(r.dir, meta.Name)
 	return os.WriteFile(path, content, 0755)
 }

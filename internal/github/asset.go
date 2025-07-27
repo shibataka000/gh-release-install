@@ -71,10 +71,10 @@ func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, 
 		r, err := xz.NewReader(br)
 		return r, nil, err
 	case "application/x-tar":
-		r, err := newTarReader(br, execBinary.name)
+		r, err := newTarReader(br, execBinary.Name)
 		return r, nil, err
 	case "application/zip":
-		r, err := newZipReader(br, br.Size(), execBinary.name)
+		r, err := newZipReader(br, br.Size(), execBinary.Name)
 		return r, r, err
 	default:
 		return nil, nil, fmt.Errorf("MIME type of asset content was unexpected: %s", mime.String())
