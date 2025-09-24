@@ -5,13 +5,12 @@ var (
 	defaultPatterns = map[string]string{
 		// These are recommended patterns for general repository.
 		`(?i)^.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|64bit))?(\.tar\.gz|\.tar\.xz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
+		`https://github\.com/.+/releases/download/.+/(?P<name>.+)-x86_64-unknown-linux-gnu\.tar\.gz$`:                                         "{{.name}}",
 
 		// These are recommended patterns for specific repository whose release assets are hosted on GitHub.
 		// These should start with literals containing host and repository name to avoid conflict with other patterns.
-		`https://github\.com/istio/istio/releases/download/.+/istioctl-\d+\.\d+\.\d+-linux-amd64\.tar\.gz$`:      "istioctl",
-		`https://github\.com/starship/starship/releases/download/.+/starship-x86_64-unknown-linux-gnu\.tar\.gz$`: "starship",
-		`https://github\.com/protocolbuffers/protobuf/releases/download/.+/protoc-\d+\.\d+-linux-x86_64\.zip$`:   "protoc",
-		`https://github\.com/astral-sh/uv/releases/download/.+/uv-x86_64-unknown-linux-gnu\.tar\.gz$`:            "uv",
+		`https://github\.com/istio/istio/releases/download/.+/istioctl-\d+\.\d+\.\d+-linux-amd64\.tar\.gz$`:    "istioctl",
+		`https://github\.com/protocolbuffers/protobuf/releases/download/.+/protoc-\d+\.\d+-linux-x86_64\.zip$`: "protoc",
 
 		// These are recommended patterns for specific repository whose release assets are hosted on server other than GitHub.
 		// These should start with literals containing host to avoid conflict with other patterns.
