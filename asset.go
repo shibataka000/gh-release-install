@@ -29,7 +29,7 @@ type AssetContent []byte
 func (a AssetContent) extract(execBinary ExecBinary) (ExecBinaryContent, error) {
 	b := []byte(a)
 	for !isExecBinaryContent(b) {
-		r, c, err := newReaderToExtract(b, execBinary)
+		r, err := newReaderToExtract(b, execBinary)
 		if err != nil {
 			return nil, err
 		}
@@ -37,10 +37,8 @@ func (a AssetContent) extract(execBinary ExecBinary) (ExecBinaryContent, error) 
 		if err != nil {
 			return nil, err
 		}
-		if c != nil {
-			if err := c.Close(); err != nil {
-				return nil, err
-			}
+		if err := r.Close(); err != nil {
+			return nil, err
 		}
 	}
 	return ExecBinaryContent(b), nil
@@ -54,38 +52,39 @@ func isExecBinaryContent(b []byte) bool {
 }
 
 // newReaderToExtract returns an [io.Reader] to unarchive/decompress given bytes.
-// Closing [io.ReadCloser] is caller's responsibility if it is not nil.
-func newReaderToExtract(b []byte, execBinary ExecBinary) (io.Reader, io.Closer, error) {
+// Closing [io.ReadCloser] is caller's responsibility.
+func newReaderToExtract(b []byte, execBinary ExecBinary) (io.ReadCloser, error) {
 	br := bytes.NewReader(b)
 	mime := mimetype.Detect(b)
 
 	switch mime.String() {
 	case "application/gzip":
-		r, err := gzip.NewReader(br)
-		return r, nil, err
+		return gzip.NewReader(br)
 	case "application/x-xz":
 		r, err := xz.NewReader(br)
-		return r, nil, err
+		if err != nil {
+			return nil, err
+		}
+		return io.NopCloser(r), nil
 	case "application/x-tar":
-		r, err := newTarReader(br, execBinary.name)
-		return r, nil, err
+		return newTarReader(br, execBinary.name)
 	case "application/zip":
-		r, err := newZipReader(br, br.Size(), execBinary.name)
-		return r, r, err
+		return newZipReader(br, br.Size(), execBinary.name)
 	default:
-		return nil, nil, fmt.Errorf("MIME type of asset content was unexpected: %s", mime.String())
+		return nil, fmt.Errorf("MIME type of asset content was unexpected: %s", mime.String())
 	}
 }
 
-// newTarReader returns a [io.Reader] to read file which is given name in tarball.
-func newTarReader(r io.Reader, name string) (io.Reader, error) {
+// newTarReader returns a [io.ReadCloser] to read file which is given name in tarball.
+// Closing [io.ReadCloser] is caller's responsibility.
+func newTarReader(r io.Reader, name string) (io.ReadCloser, error) {
 	for tr := tar.NewReader(r); ; {
 		header, err := tr.Next()
 		if err != nil {
 			return nil, err
 		}
 		if filepath.Base(header.Name) == name && header.Typeflag == tar.TypeReg {
-			return tr, nil
+			return io.NopCloser(tr), nil
 		}
 	}
 }
