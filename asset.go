@@ -51,7 +51,7 @@ func isExecBinaryContent(b []byte) bool {
 	return slices.Contains(binaryMIMEs, mime.String())
 }
 
-// newReaderToExtract returns an [io.Reader] to unarchive/decompress given bytes.
+// newReaderToExtract returns a [io.ReadCloser] to unarchive/decompress given bytes.
 // Closing [io.ReadCloser] is caller's responsibility.
 func newReaderToExtract(b []byte, execBinary ExecBinary) (io.ReadCloser, error) {
 	br := bytes.NewReader(b)
