@@ -1,10 +1,10 @@
 module github.com/shibataka000/gh-release-install
 
-go 1.24.0
+go 1.25.0
 
 require (
 	github.com/cheggaaa/pb/v3 v3.1.7
-	github.com/cli/go-gh/v2 v2.12.2
+	github.com/cli/go-gh/v2 v2.13.0
 	github.com/gabriel-vasile/mimetype v1.4.11
 	github.com/google/go-github/v67 v67.0.0
 	github.com/spf13/cobra v1.10.1
