@@ -116,6 +116,18 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 			test: exec.Command("./sops", "--version"),
 		},
 		{
+			repo: "github/copilot-cli",
+			tag:  "v1.0.2",
+			asset: Asset{
+				id:          368524779,
+				downloadURL: must(url.Parse("https://github.com/github/copilot-cli/releases/download/v1.0.2/copilot-linux-x64.tar.gz")),
+			},
+			execBinary: ExecBinary{
+				name: "copilot",
+			},
+			test: exec.Command("./copilot", "--version"),
+		},
+		{
 			repo: "goodwithtech/dockle",
 			tag:  "v0.4.14",
 			asset: Asset{
