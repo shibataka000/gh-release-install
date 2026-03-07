@@ -21,10 +21,10 @@ func TestApplicationServiceForLinuxAmd64(t *testing.T) {
 	}{
 		{
 			repo: "aquasecurity/trivy",
-			tag:  "v0.53.0",
+			tag:  "v0.69.3",
 			asset: Asset{
-				id:          176981043,
-				downloadURL: must(url.Parse("https://github.com/aquasecurity/trivy/releases/download/v0.53.0/trivy_0.53.0_Linux-64bit.tar.gz")),
+				id:          366054826,
+				downloadURL: must(url.Parse("https://github.com/aquasecurity/trivy/releases/download/v0.69.3/trivy_0.69.3_Linux-64bit.tar.gz")),
 			},
 			execBinary: ExecBinary{
 				name: "trivy",
