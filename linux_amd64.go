@@ -4,8 +4,8 @@ var (
 	// defaultPatterns are recommended patterns for linux/amd64.
 	defaultPatterns = map[string]string{
 		// These are recommended patterns for general repository.
-		`(?i)^.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|64bit))?(\.tar\.gz|\.tar\.xz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
-		`https://github\.com/.+/releases/download/.+/(?P<name>.+)-x86_64-unknown-linux-gnu\.tar\.gz$`:                                         "{{.name}}",
+		`(?i)^.+/(?P<name>[^\.]+)([\-\._]v?\d+\.\d+\.\d+)?[\-\._]linux([\-\._](amd64|x86_64|x64|64bit))?(\.tar\.gz|\.tar\.xz|\.zip|\.gz|\.tgz)?$`: "{{.name}}",
+		`https://github\.com/.+/releases/download/.+/(?P<name>.+)-x86_64-unknown-linux-gnu\.tar\.gz$`:                                             "{{.name}}",
 
 		// These are recommended patterns for specific repository whose release assets are hosted on GitHub.
 		// These should start with literals containing host and repository name to avoid conflict with other patterns.
